@@ -1,0 +1,6 @@
+# untracked
+exao_dap/settings.py
+db.sqlite3
+# cruft
+__pycache__
+.DS_Store
