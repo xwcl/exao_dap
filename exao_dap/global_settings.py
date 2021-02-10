@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = []
+
 
 # Application definition
 
@@ -26,7 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'exao_dap.registry',
+    'social_django',
+    'django_extensions',
+    # 'exao_dap.registry',
 ]
 
 MIDDLEWARE = [
@@ -44,7 +47,7 @@ ROOT_URLCONF = 'exao_dap.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'exao_dap' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,4 +99,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATICFILES_DIRS = [
+    BASE_DIR / "exao_dap" / "static",
+]
+
 STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = (
+    'exao_dap.cyverse.CyVerseOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_CYVERSE_OAUTH2_KEY = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_KEY')
+SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET')
+
+IRODS_USER_NAME = 'exao_dap'
+IRODS_ZONE_NAME = 'iplant'
+IRODS_PASSWORD = os.environ.get('DAP_IRODS_PASSWORD')
+IRODS_HOST = 'data.cyverse.org'
+IRODS_PORT = 1247
