@@ -1,8 +1,8 @@
 {% load static %}
-  <div class="container">
+  <div class="container mb-6">
     <nav class="navbar" id="top-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item has-text-primary" href="https://xwcl.science/">
+        <a class="navbar-item has-text-primary" href="/">
           <img src="{% static 'xwcl_logo.png' %}">
           &nbsp;
           Distributed Analysis Platform
@@ -17,6 +17,7 @@
 
       <div class="navbar-menu">
         <div class="navbar-start">
+        {% if user.is_authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="">
               Registry
@@ -27,13 +28,10 @@
                 Query
               </a>
               <a class="navbar-item" href="#registry-ingest-new">
-                Ingest new dataset
+                Datasets
               </a>
               <a class="navbar-item">
-                Ingest job status
-              </a>
-              <a class="navbar-item">
-                My data
+                Ingest data
               </a>
             </div>
           </div>
@@ -45,13 +43,10 @@
 
             <div class="navbar-dropdown">
               <a class="navbar-item">
-                Undertake a grid of jobs
+                Grids
               </a>
               <a class="navbar-item">
-                Undertake a single job
-              </a>
-              <a class="navbar-item">
-                Job status
+                Jobs
               </a>
             </div>
           </div>
@@ -66,7 +61,7 @@
             </a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">
+              <a class="navbar-item" href="{% url 'about' %}">
                 About
               </a>
               <a class="navbar-item">
@@ -78,6 +73,17 @@
               </a>
             </div>
           </div>
+          {% else %}
+          <a class="navbar-item" href="{% url 'about' %}">
+            About
+          </a>
+          <a class="navbar-item">
+            Documentation
+          </a>
+          <a class="navbar-item">
+            Contact
+          </a>
+          {% endif %}
         </div>
 
         <div class="navbar-end">
