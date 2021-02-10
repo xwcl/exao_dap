@@ -1,0 +1,16 @@
+@import "./framework.sass";
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import './NotoSans/NotoSans.css';
+
+
+ul.inline, ol.inline {
+    // padding: inherit;
+    list-style: none;
+    & > li {
+        display: inline;
+        &:not(:last-child)::after {
+            content: "\25CF";
+            margin: 0 0 0 0.25em;
+        }
+    }
+}

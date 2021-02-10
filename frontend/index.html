@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XWCL DAP</title>
+  <link rel="stylesheet" href="./app.scss">
+  <script defer src="./index.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <nav class="navbar" id="top-navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item has-text-primary" href="https://xwcl.science/">
+          <img src="./xwcl_logo.png">
+          &nbsp;
+          Distributed Analysis Platform
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="">
+              Registry
+            </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                Query
+              </a>
+              <a class="navbar-item" href="#registry-ingest-new">
+                Ingest new dataset
+              </a>
+              <a class="navbar-item">
+                Ingest job status
+              </a>
+              <a class="navbar-item">
+                My data
+              </a>
+            </div>
+          </div>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="">
+              Undertakings
+            </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                Undertake a grid of jobs
+              </a>
+              <a class="navbar-item">
+                Undertake a single job
+              </a>
+              <a class="navbar-item">
+                Job status
+              </a>
+            </div>
+          </div>
+
+          <a class="navbar-item">
+            Documentation
+          </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="">
+              More
+            </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                About
+              </a>
+              <a class="navbar-item">
+                Contact
+              </a>
+              <hr class="navbar-divider">
+              <a class="navbar-item">
+                Report an issue
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="">
+            <div style="display: inline-block; vertical-align: middle; background: url(http://placehold.it/32x32) center; border-radius: 100%; width: 0; height: 0; padding: 16px; margin-right: 0.5rem;"></div>
+            User F. Name
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item">
+                Log out
+              </a>
+            </div>
+          </div>
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-outlined" id="signup-button">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-cyverse-blue" id="login-button">
+                <strong>Log in</strong>&nbsp;with CyVerse
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <section class="has-background-info">
+    <div class="container mt-6 mb-6 pt-6 pb-6">
+      <h2 class="heading is-size-5 has-text-white-ter">Extreme Adaptive Optics</h2>
+      <h1 class="title has-text-white">
+        Distributed Analysis Platform
+      </h1>
+      <p class="subtitle">
+        from the Extreme Wavefront Control Lab at The University of Arizona
+      </p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="columns is-3">
+      <div class="column">
+        <div class="box has-background-warning content">
+          <h1 class="has-text-white">Register datasets</h1>
+          <p class="subtitle">High-contrast imaging data and metadata, made searchable.</p>
+          <div class="content">
+            <ul>
+              <li>Store your data in the cloud with CyVerse, then use its metadata to select files for analysis.</li>
+              <li>Manage calibrations, reference files, scientific data, and post-processing products.</li>
+              <li>Private by default, but contributing your data to big data efforts in astronomical high-contrast imaging is as easy as checking a box.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box has-background-success content">
+          <h1 class="has-text-white">Undertake analyses</h1>
+          <p class="subtitle">Get your code and data together, then bring home the results</p>
+          <div class="content">
+            <ul>
+              <li>Analyze across a grid of parameters to find the optimal set</li>
+              <li>Use our analysis code, or bring your own with <a class="has-text-link-light" href="">Singularity</a> and Docker containers</li>
+              <li>Leverage high performance computers through the <a class="has-text-link-light" href="">Open Science Grid</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer mt-6">
+    <div class="content has-text-centered">
+      <ul class="inline">
+        <li><a href="">About</a></li>
+        <li><a href="">Contact</a></li>
+        <li><a href="">Feedback</a></li>
+      </ul>
+      <p>
+        Built at the <a href="">Extreme Wavefront Control Lab</a> of <a href="">Steward Observatory</a> at the <a href="">The University of Arizona</a>. Home of the MagAO and MagAO-X instruments.
+      </p>
+    </div>
+  </footer>
+
+  <section class="section container">
+    <h1 class="title" id="registry-query-data">
+      Query data
+    </h1>
+  </section>
+  <section class="section container has-background-primary-light">
+      <div class="field">
+        <label>
+          <span class="label">Uploading user</span>
+          <div class="control">
+            <input class="input" type="text" placeholder="/iplant/home/exao_dap/data/mine">
+          </div>
+        </label>
+      </div>
+      <div class="field">
+        <label>
+          <span class="label">Limit to datasets</span>
+          <div class="control">
+            <input class="input" type="text" placeholder="males_2015_sirius">
+          </div>
+        </label>
+      </div>
+      <div class="field">
+        <label>
+          <span class="label">Datum kind</span>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="rsvp">
+              <span class="tag is-warning">calibration</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="rsvp">
+              <span class="tag is-info">reference</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="rsvp">
+              <span class="tag is-black">on-sky</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="rsvp">
+              <span class="tag is-light">simulation</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div class="field">
+        <label>
+          <span class="label">Creation date</span>
+          <div class="control">
+            Foo
+          </div>
+        </label>
+      </div>
+      <div class="field">
+        <span class="label">Metadata constraints</span>
+        <p class="help mb-3">Datum must satisfy all of the constraints below to be selected</p>
+        <ol class="constraints">
+          <li class="constraint"><input class="input" value="fits.*.PARANG"> is <div class="select">
+              <select>
+                <option>between</option>
+                <option>With options</option>
+              </select>
+            </div> <input class="input" value="0"> and <input class="input" value="1">
+            <button class="button is-danger">
+              <span class="icon is-small">
+                <i class="fas fa-trash-alt"></i>
+              </span>
+            </button>
+          </li>
+        </ol>
+        <div class="buttons are-small">
+          <button class="button is-primary is-rounded">+ has metadata key</button>
+          <button class="button is-primary is-rounded">+ limit value range</button>
+          <button class="button is-primary is-rounded">+ limit set of values</button>
+          <button class="button is-primary is-rounded">+ value must exactly equal</button>
+        </div>
+  </section>
+
+  <!-- begin body -->
+  <section class="section columns">
+    <h1 class="title column is-offset-2" id="registry-ingest-new">
+      Ingest new dataset
+    </h1>
+  </section>
+  <section class="section columns has-background-primary-light">
+    <div class="column is-2 is-size-3 has-text-right">1.</div>
+    <div class="column">
+      <h1 class="is-size-3">Enter path to your dataset</h1>
+      <p class="block">This must be a folder path on the CyVerse Data Store. (See <a href="">Uploading to CyVerse
+          Data Store</a>)</p>
+      <div class="field">
+        <label>
+          <span class="label">CyVerse Data Store path</span>
+          <div class="control">
+            <input class="input" type="text" placeholder="/iplant/home/exao_dap/data/mine">
+          </div>
+        </label>
+      </div>
+    </div>
+  </section>
+  <section class="section columns has-background-warning-light">
+    <div class="column is-2 is-size-3 has-text-right">2.</div>
+    <div class="column">
+      <h1 class="is-size-3">Verify that the platform can see your dataset</h1>
+      <p class="block">The platform retrieves your data by logging in as <code>exao_dap</code>, and the path you
+        enter must be readable by the platform.</p>
+      <p class="block"><strong>Proprietary data?</strong> Datasets you add to the registry are private to your CyVerse
+        login by default, but can be made public later.</p>
+
+      <button class="block button is-large is-warning">Verify</button>
+      <div class="notification block has-background-warning-dark has-text-white-ter content">
+        <p>We couldn't read that folder. If you have iRODS iCommands installed on your computer, you can grant
+          permission with</p>
+        <pre>ichmod /iplant/home/exao_dap/data/mine</pre>
+      </div>
+    </div>
+  </section>
+  <section class="section columns has-background-success-light">
+    <div class="column is-2 is-size-3 has-text-right">3.</div>
+    <div class="column">
+      <h1 class="is-size-3">Annotate your dataset with metadata</h1>
+      <div class="content">
+        <p>Designate each file as one of <span class="tag is-warning">calibration</span>, <span
+            class="tag is-info">reference</span>, <span class="tag is-black">on sky</span>, or <span
+            class="tag is-light">simulation</span> while the platform retrieves each file's <a href="">embedded
+            metadata</a>. (This may take a while!) You can optionally add a text description. There's no set format, but
+          you may want to include comments on observing conditions, input parameters, or the like.</p>
+      </div>
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="field">
+            <label>
+              <span class="label">Name</span>
+              <div class="control">
+                <input class="input" type="text" placeholder="Descriptive Name (spaces allowed)">
+              </div>
+            </label>
+          </div>
+          <div class="field has-addons">
+            <label>
+              <span class="label">Identifier</span>
+              <div class="control">
+                <input class="input" type="text" placeholder="foldername">
+                <p class="help">Must be unique. Use letters, numbers, and underscores.</p>
+              </div>
+              <button class="button is-small">Check</button>
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span class="label">Description</span>
+              <div class="control">
+                <textarea class="textarea"></textarea>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="column is-two-thirds">
+          <div class="label">Dataset</div>
+          <h3 class="heading">Mark all:</h3>
+          <div class="block">
+            <p><button class="button is-small is-warning">calibration</button> <button
+                class="button is-small is-info">reference</button> <button class="button is-small is-primary">on
+                sky</button></p>
+          </div>
+          <div class="block">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Kind</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Kind</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td>frame_0001.fits</td>
+                  <td>
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-warning">calibration</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-info">reference</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-black">on-sky</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-light">simulation</span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>frame_0002.fits</td>
+                  <td>
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-warning">calibration</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-info">reference</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-black">on-sky</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-light">simulation</span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>frame_0003.fits</td>
+                  <td>
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-warning">calibration</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-info">reference</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-black">on-sky</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-light">simulation</span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <button class="button is-primary">Submit to registry</button>
+    </div>
+  </section>
+  <section class="section columns has-background-danger-light">
+    <div class="column is-2 is-size-3 has-text-right">4.</div>
+    <div class="column">
+      <h1 class="is-size-3">Wait and confirm</h1>
+      <p class="block">
+        We're recording the metadata from your files in our registry. When this is complete, you'll be notified
+        automatically at {{ user.email }}. Approve the new dataset using the link in the email, or visit <a
+          href="">Ingest Job Status</a> to
+        check on it.
+      </p>
+      <button class="button">Check ingest status</button>
+      <button class="button">Submit another</button>
+    </div>
+  </section>
+
+</body>
+
+</html>

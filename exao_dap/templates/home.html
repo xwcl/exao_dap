@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block "content" %}
+<p>User is {{ user }}</p>
+<a href="{% url "login" %}">Log in</a> | <a href="{% url "logout" %}">Log out</a>
+{% endblock %}
