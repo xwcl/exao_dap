@@ -6,12 +6,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>XWCL DAP</title>
-  <link rel="stylesheet" href="{% static ''%}">
-  <script defer src="./index.js"></script>
+  <link rel="stylesheet" href="{% static 'bundle/app.css' %}">
 </head>
 
 <body>
   {% include "includes/top_navbar.html" %}
   {% block "content" %}{% endblock %}
+  <footer class="footer mt-4">
+    <div class="content has-text-centered">
+      <ul class="inline">
+        <li><a href="">About</a></li>
+        <li><a href="">Contact</a></li>
+        <li><a href="">Feedback</a></li>
+      </ul>
+      <p>
+        Built at the <a href="">Extreme Wavefront Control Lab</a> of <a href="">Steward Observatory</a> at the <a href="">The University of Arizona</a>. Home of the MagAO and MagAO-X instruments.
+      </p>
+    </div>
+  </footer>
+
   </body>
 </html>

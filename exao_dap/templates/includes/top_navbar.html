@@ -1,8 +1,9 @@
+{% load static %}
   <div class="container">
     <nav class="navbar" id="top-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item has-text-primary" href="https://xwcl.science/">
-          <img src="./xwcl_logo.png">
+          <img src="{% static 'xwcl_logo.png' %}">
           &nbsp;
           Distributed Analysis Platform
         </a>
@@ -80,27 +81,34 @@
         </div>
 
         <div class="navbar-end">
+        {% if user.is_authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="">
-            <div style="display: inline-block; vertical-align: middle; background: url(http://placehold.it/32x32) center; border-radius: 100%; width: 0; height: 0; padding: 16px; margin-right: 0.5rem;"></div>
-            User F. Name
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-user"></i>
+              </span>
+              <span>{{ user.username }}</span>
+            </span>
             </a>
             <div class="navbar-dropdown">
-              <a class="navbar-item">
+              <a class="navbar-item" href="{% url "logout" %}">
                 Log out
               </a>
             </div>
           </div>
+          {% else %}
           <div class="navbar-item">
             <div class="buttons">
               <a class="button is-outlined" id="signup-button">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-cyverse-blue" id="login-button">
+              <a class="button is-cyverse-blue" id="login-button" href="{% url "social:begin" "cyverse-oauth2" %}">
                 <strong>Log in</strong>&nbsp;with CyVerse
               </a>
             </div>
           </div>
+        {% endif %}
         </div>
       </div>
     </nav>

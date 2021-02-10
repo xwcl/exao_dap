@@ -1,7 +1,12 @@
 # untracked
 exao_dap/settings.py
 db.sqlite3
+env/
 # cruft
 __pycache__
 .DS_Store
 node_modules
+.cache
+.parcel-cache
+exao_dap.egg-info/
+yarn-error.log

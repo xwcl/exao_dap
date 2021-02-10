@@ -1,5 +1,51 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block "content" %}
-<p>User is {{ user }}</p>
-<a href="{% url "login" %}">Log in</a> | <a href="{% url "logout" %}">Log out</a>
+<section class="has-background-info" id="hero">
+    <div class="container mt-6 mb-6 pt-6 pb-6">
+      <h2 class="heading is-size-5 has-text-white-ter">Extreme Adaptive Optics</h2>
+      <h1 class="title has-text-white">
+        Distributed Analysis Platform
+      </h1>
+      <p class="subtitle has-text-white-ter">
+        from the Extreme Wavefront Control Lab at The University of Arizona
+      </p>
+      <div class="buttons are-medium">
+      <button class="button">Get started</button>
+      <button class="button is-success">Learn more</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="columns is-3">
+      <div class="column">
+        <div class="box has-background-warning content" style="height: 100%">
+          <h1 class="has-text-white">Register datasets</h1>
+          <p class="subtitle">High-contrast imaging data and metadata, made searchable.</p>
+          <div class="content">
+            <ul>
+              <li>Store your data in the cloud with CyVerse, then use its metadata to select files for analysis.</li>
+              <li>Manage calibrations, reference files, scientific data, and post-processing products.</li>
+              <li>Private by default, but contributing your data to big data efforts in astronomical high-contrast imaging is as easy as checking a box.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box has-background-success content" style="height: 100%">
+          <h1 class="has-text-white">Undertake analyses</h1>
+          <p class="subtitle">Get your code and data together, then bring home the results</p>
+          <div class="content">
+            <ul>
+              <li>Analyze across a grid of parameters to find the optimal set</li>
+              <li>Use our analysis code, or bring your own with <a class="has-text-link-light" href="">Singularity</a> and Docker containers</li>
+              <li>Leverage high performance computers through the <a class="has-text-link-light" href="">Open Science Grid</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </section>
+    </div>
+  </div>
 {% endblock %}
