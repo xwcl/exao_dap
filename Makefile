@@ -3,6 +3,7 @@ python_install:
 	if [[ ! -d ./env ]]; then python -m venv ./env; fi
 	./env/bin/pip install -e .
 	if [[ ! -e ./exao_dap/settings.py ]]; then cp ./exao_dap/settings.py.example ./exao_dap/settings.py; fi
+	./env/bin/python manage.py migrate
 yarn_install:
 	yarn install
 styles:
