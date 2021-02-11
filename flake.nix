@@ -19,8 +19,8 @@
     {
     defaultPackage.x86_64-linux = dapEnv;
     nixosModules.dap = let
-      checkoutKeyPath = /root/.ssh/id_ed25519_dap;
-      checkoutPath = /home/dap/exao_dap;
+      checkoutKeyPath = "/root/.ssh/id_ed25519_dap";
+      checkoutPath = "/home/dap/exao_dap";
     in
     {
       users.extraUsers.dap = {
