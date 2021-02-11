@@ -6,9 +6,10 @@
 
   outputs = { self, nixpkgs, poetry2nix-src }: 
     let
-      dapEnv = let
         pkgs = import nixpkgs { system = "x86_64-linux"; overlays = [ poetry2nix-src.overlay ]; };
-      in pkgs.poetry2nix.mkPoetryEnv {
+    in
+    let
+      dapEnv = pkgs.poetry2nix.mkPoetryEnv {
         projectDir = ./.;
         editablePackageSources = {
           exao_dap = ./exao_dap;
