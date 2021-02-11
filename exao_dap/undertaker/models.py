@@ -18,6 +18,6 @@ class BigJob(models.Model):
     state = models.CharField(choices=BigJobState.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    destination_dataset = models.ForeignKey('registry.DataSet')
+    destination_dataset = models.ForeignKey('registrar.DataSet')
     # how to specify inputs?
     inputs_spec = models.JSONField()

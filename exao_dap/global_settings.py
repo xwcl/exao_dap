@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_django',
     'django_extensions',
-    # 'exao_dap.registry',
+    # 'exao_dap.registrar',
+    # 'exao_dap.undertaker',
 ]
 
 MIDDLEWARE = [

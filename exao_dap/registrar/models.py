@@ -28,13 +28,13 @@ class DataSet(models.Model):
     # access control
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     shared = models.ManyToManyField(settings.AUTH_USER_MODEL)  # can be refreshed on demand from iRODS, should be done nightly or something
-    dependencies = models.ManyToManyField(DataSet)  # for postprocessing products, obtainable through recursive walking of grids and bigjobs but as these should be R/O it is safe to denormalize
+    # dependencies = models.ManyToManyField(DataSet)  # for postprocessing products, obtainable through recursive walking of grids and bigjobs but as these should be R/O it is safe to denormalize
     public = models.BooleanField()
 
 
 class Datum(models.Model):
     path = models.CharField(primary_key=True, editable=False)  # want to copy in to service's storage area so backing files won't disappear, but should give read/ls access to original owner user
-    # dataset = models.ForeignKey()
+    dataset = models.ForeignKey(DataSet)
     class DatumKind(models.TextChoices):
         REFERENCE = 'reference', 'reference'
         SCIENCE = 'science', 'science'
