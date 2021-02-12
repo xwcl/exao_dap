@@ -34,7 +34,9 @@ setup(
         'django>=3.1.5,<4',
         'social-auth-app-django>=4.0.0,<5',
         'django-extensions>=3.1.0,<4',
-        'gunicorn>=20.0,<21'
+        'gunicorn>=20.0,<21',
+        'fsspec>=0.8.5,<0.9',
+        'irods-fsspec'
     ],
     package_data={
         PROJECT: ['VERSION'],

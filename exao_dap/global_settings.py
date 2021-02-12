@@ -16,7 +16,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = [
-    'dap.xwcl.science'
+    'dap.xwcl.science',
+    'localhost',
 ]
 
 

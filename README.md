@@ -1,5 +1,14 @@
 # The ExAO Data Analysis Platform web application
 
+## Secrets
+
+Production secrets are stored in a KeePass archive in the team Box folder.
+
+### Generating secrets
+
+  * See `cyverse.py` docstring for creating CyVerse OAuth2 secrets
+  * Regenerate deploy key with `ssh-keygen -t ed25519 -N "" -f secrets/id_ed25519_deploy` and update `users.extraUsers.exao_dap.openssh.authorizedKeys` in `dap_infrastructure/configuration.nix`
+
 ## Setup for local development
 
 ### macOS with Homebrew
