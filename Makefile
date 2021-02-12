@@ -5,8 +5,9 @@ build-assets:
 	bash -x ./build-assets.sh
 dev-frontend: build_assets
 	cd frontend && yarn run parcel serve frontend/index.html
-dev-backend: dev-backend-stop
+docker-build:
 	docker build . -t exao_dap
+dev-backend: dev-backend-stop docker-build
 	mkdir -p ./state/static/
 	rm -rf ./state/static/*
 	docker run \
@@ -21,7 +22,10 @@ dev-backend: dev-backend-stop
 	docker exec dev_exao_dap env/bin/python manage.py migrate
 dev-backend-stop:
 	docker rm -f dev_exao_dap || true
-deploy:
-	echo "TODO"
+deploy: docker-build
+	docker tag exao_dap xwcl/exao_dap
+	docker push xwcl/exao_dap
+	ssh dap.xwcl.science sudo -u exao_dap podman pull xwcl/exao_dap
+	ssh dap.xwcl.science sudo systemctl restart podman-exao_dap exao_dap-setup
 
-.PHONY: all init-python build-assets serve deploy dev-frontend
+.PHONY: all init-python build-assets serve deploy dev-frontend dev-backend docker-build
