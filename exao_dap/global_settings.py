@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ALLOWED_HOSTS = [
     'dap.xwcl.science',
     'localhost',
+    '127.0.0.1',
 ]
 
 

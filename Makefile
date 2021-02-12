@@ -18,6 +18,7 @@ dev-backend: dev-backend-stop
 		--detach \
 		exao_dap
 	docker exec dev_exao_dap env/bin/python manage.py collectstatic
+	docker exec dev_exao_dap env/bin/python manage.py migrate
 dev-backend-stop:
 	docker rm -f dev_exao_dap || true
 deploy:
