@@ -13,5 +13,4 @@ COPY --from=assetBuild /frontend/dist/ /exao_dap/exao_dap/static/exao_dap/bundle
 RUN bash -x ./init-python.sh
 VOLUME /var/lib/exao_dap
 EXPOSE 8000
-USER exao_dap
 ENTRYPOINT [ "/exao_dap/env/bin/gunicorn", "exao_dap.wsgi", "--bind", "0.0.0.0:8000" ]
