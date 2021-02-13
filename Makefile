@@ -2,9 +2,10 @@ all: init-python build-assets
 init-python: build_assets
 	bash -x ./init-python.sh
 build-assets:
-	bash -x ./build-assets.sh
-dev-frontend: build_assets
-	cd frontend && yarn run parcel serve frontend/index.html
+	cd frontend/ && bash -x ./build-assets.sh
+	cp -R frontend/dist/* ./exao_dap/static/exao_dap/bundle/
+dev-frontend: build-assets
+	cd frontend && yarn run parcel serve index.html
 docker-build:
 	docker build . -t exao_dap
 dev-backend: dev-backend-stop docker-build

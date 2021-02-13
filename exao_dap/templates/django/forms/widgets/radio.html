@@ -1,0 +1,10 @@
+{% with id=widget.attrs.id %}<div{% if id %} id="{{ id }}"{% endif %} class="control radio{% if widget.attrs.class %} {{ widget.attrs.class }}{% endif %}">{% for group, options, index in widget.optgroups %}{% if group %}
+  <span class="group label">{{ group }}</span>{% endif %}{% for option in options %}
+    {% with widget=option %}<label class="radio"{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>
+    {% include "django/forms/widgets/input.html" %}
+    <span class="choice choice-{{widget.value|stringformat:'s'}}">{{ widget.label }}</span>
+    </label>
+    {% endwith %}
+    {% endfor %}
+    {% endfor %}
+</div>{% endwith %}

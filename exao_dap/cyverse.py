@@ -50,7 +50,66 @@ from social_core.backends.oauth import BaseOAuth2
 import fsspec
 import irods_fsspec
 irods_fsspec.register()
+from django.conf import settings
+from urllib.parse import urlparse
+from irods.session import iRODSSession
+# from irods.models import Collection, CollectionAccess, CollectionUser, User
+# IRODS_ACCESS_TYPE_OWN = 1200
+# IRODS_ACCESS_TYPE_MODIFY = 1120
+# IRODS_ACCESS_TYPE_READ = 1050
+import threading
+_LOCAL = threading.local()
+# IRODS_PORT = 1247
 
+
+# def irods_config_from_url(url):
+#     result = urlparse(url)
+#     if result.username is not None:
+#         try:
+#             user, zone = result.username.split('+')
+#         except ValueError:
+#             user = result.username
+#             zone = None
+#     else:
+#         user = None
+#         zone = None
+#     return {
+#         'user': user,
+#         'zone': zone,
+#         'password': result.password,
+#         'host': result.hostname,
+#         'port': result.port if result.port is not None else IRODS_PORT,
+#     }
+from urllib.parse import urlparse
+IRODS_HOME = urlparse(settings.IRODS_URL).path
+
+def irods_get_session():
+    if not hasattr(_LOCAL, 'session'):
+        config = irods_fsspec.irods_config_from_url(settings.IRODS_URL)
+        session = iRODSSession(**config)
+        _LOCAL.session = session
+    return _LOCAL.session
+
+def irods_get_fs():
+    if not hasattr(_LOCAL, 'irodsfs'):
+        session = irods_get_session()
+        fs = fsspec.filesystem('irods', session=session)
+        _LOCAL.irodsfs = fs
+    return _LOCAL.irodsfs
+
+def irods_check_access(path):
+    import time
+    start = time.perf_counter()
+    fs = irods_get_fs()
+    try:
+        exists = fs.exists(path)
+        found = True
+    except FileNotFoundError as e:
+        found = False
+    duration = time.perf_counter() - start
+    print(f'Testing access to {path} too {duration} sec')
+    return found
+    
 
 class CyVerseOAuth2(BaseOAuth2):
     """CyVerse OAuth authentication backend"""

@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% block "outside_container" %}
+  <section class="section columns"><div class="container">
+    <h1 class="title column is-offset-2" id="registry-ingest-new">
+      Ingest new dataset
+    </h1>
+  </div></section>
+  {% comment %} begin path verify form {% endcomment %}
+  {% if verify_form %}<form action="#verify" method="GET">{% endif %}
+  <section class="section has-background-primary-light"><div class="container"><div class="columns">
+    <div class="column is-2 is-size-3 has-text-right">1.</div>
+    <div class="column">
+      <h1 class="is-size-3">Enter path to your dataset</h1>
+      <p class="block">This must be a folder path on the CyVerse Data Store. (See <a href="">Uploading to CyVerse
+          Data Store</a>)</p>
+      {% if verify_form %}
+      <div class="field">
+        <label>
+          <span class="label">{{ verify_form.path.label }}</span>
+          <div class="control">
+            <input 
+              class="input"
+              type="text"
+              placeholder="/iplant/home/exao_dap/data/mine"
+              name="path"
+              value="{{ verify_form.path.value|default:"" }}"
+            >
+          </div>
+        </label>
+      </div>
+      {% else %}
+      <div class="field">
+        <label>
+          <span class="label">CyVerse Data Store path</span>
+          <div class="control">
+            <input 
+              class="input"
+              type="text"
+              disabled
+              value="{{ path }}"
+            >
+          </div>
+        </label>
+        
+      </div>
+      <a href="{% url 'registrar_ingest' %}" class="button">Use a different path</a>
+      {% endif %}
+    </div>
+  </div></div></section>
+  <section class="section columns has-background-warning-light" id="verify"><div class="container"><div class="columns">
+    <div class="column is-2 is-size-3 has-text-right">2.</div>
+    <div class="column">
+      <h1 class="is-size-3">Verify that the platform can see your dataset</h1>
+      {% if verify_form %}
+      <p class="block">The platform connects to the Data Store as <code>exao_dap</code>, and the path you
+        enter must be readable by the platform user. 
+         If you have iRODS iCommands installed on your computer, you can grant
+          permission with</p>
+            <pre class="block">ichmod -r read exao_dap {{ path }}</pre>
+      <p class="block"><strong>Proprietary data?</strong> Datasets you add to the registry are private to your CyVerse
+        login by default, but can be made public later.</p>
+
+      <button type="submit" class="block button is-large is-warning">Verify</button>
+      {{ verify_form.non_field_errors }}
+      {% for err in verify_form.path.errors %}
+        <div class="notification block has-background-warning-dark has-text-white-ter content">
+        <p>{{ err }}</p>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div></div></section>
+  {% if verify_form %}</form>{% endif %}
+  {% comment %} end path verify form {% endcomment %}
+  {% comment %} begin ingest form {% endcomment %}
+  {% if ingest_form %}<form action="" method="POST">{% endif %}
+  <section class="section columns has-background-success-light"><div class="container"><div class="columns">
+    <div class="column is-2 is-size-3 has-text-right">3.</div>
+    <div class="column">
+      <h1 class="is-size-3">Annotate your dataset with metadata</h1>
+      <div class="content">
+          <p>Every dataset must indicate whether it is simulated, on sky, 
+          in lab, or from post-processing.
+          You can optionally add a text description. 
+          There's no set format, but you may want to include 
+          comments on observing conditions, input parameters, or the like.</p>
+      </div>
+      {% if ingest_form %}
+      {% for hidden in ingest_form.hidden_fields %}
+      {{ hidden }}
+      {% endfor %}
+      <div class="columns">
+        <div class="column is-one-third">
+          {{ ingest_form.non_field_errors }}
+          <div class="field">
+            <label>
+              <span class="label">Name</span>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="name"
+                  placeholder="Descriptive Name (spaces allowed)"
+                  required
+                  value="{{ ingest_form.name.value|default:"" }}"
+                >
+              </div>
+              {% for err in ingest_form.name.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span class="label">Identifier</span>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text" 
+                  name="identifier"
+                  placeholder="my_data_set_id"
+                  required
+                  value="{{ ingest_form.identifier.value|default:"" }}"
+                >
+                <p class="help">Must be unique. Use letters, numbers, and underscores.</p>
+              </div>
+              {% for err in ingest_form.identifier.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span class="label">Source</span>
+              {{ ingest_form.source }}
+              {% for err in ingest_form.name.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <span class="label">Description</span>
+              <div class="control">
+                <textarea
+                  class="textarea"
+                  name="description"
+                  placeholder="It was a dark and not particularly stormy night..."
+                  required 
+                ></textarea>
+              </div>
+              {% for err in ingest_form.description.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
+        </div>
+        <div class="column is-two-thirds">
+          <div class="label">Data</div>
+          {% comment %} <p>Designate each file as one of calibration, reference, or science, or use the buttons to mark all the files at once.</p> {% endcomment %}
+          <h3 class="heading">Mark all:</h3>
+          <div class="block">
+            <p>
+              <script type="text/javascript">
+              function toggleAllRadioButtons(value) {
+                document.querySelectorAll(`input[value="${value}"]`).forEach(x => x.click());
+              }
+              </script>
+              {% for value, label in ingest_form.data_kinds %}
+              <button type="button" onclick="toggleAllRadioButtons('{{value}}')" class="button is-small choice-{{value}}">{{ label }}</button>
+              {% endfor %}
+            </p>
+          </div>
+          <div class="block">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Kind</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Kind</th>
+                </tr>
+              </tfoot>
+              <tbody>
+              {% for field in ingest_form %}{% if field.name in ingest_form.data_kind_field_names %}
+                <tr>
+                  <td>{{ field.label }}</td>
+                  <td>
+                    {{ field.as_widget }}
+                  </td>
+                </tr>
+              {% endif %}
+              {% endfor %}
+{% comment %}               
+                <tr>
+                  <td>frame_0002.fits</td>
+                  <td>
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-warning">calibration</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-info">reference</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-black">on-sky</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-light">simulation</span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>frame_0003.fits</td>
+                  <td>
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-warning">calibration</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-info">reference</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-black">on-sky</span>
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="rsvp">
+                        <span class="tag is-light">simulation</span>
+                      </label>
+                    </div>
+                  </td>
+                </tr> {% endcomment %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div></div></section>
+  <section class="section columns has-background-danger-light"><div class="container"><div class="columns">
+    <div class="column is-2 is-size-3 has-text-right">4.</div>
+    <div class="column">
+      <h1 class="is-size-3">Ingest and confirm</h1>
+      <p class="block">
+        When you submit your dataset for ingest, we will start recording the 
+        metadata from your files in our registry. When this is complete, you'll 
+        be notified automatically at {{ user.email }}.
+      </p>
+      {% if ingest_form %}<button class="button is-primary" type="submit">Ingest</button>{% endif %}
+    </div>
+  </div></div></section>
+  {% if ingest_form %}</form>{% endif %}
+{% endblock "outside_container" %}

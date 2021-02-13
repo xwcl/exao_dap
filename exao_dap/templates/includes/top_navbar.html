@@ -19,18 +19,18 @@
         <div class="navbar-start">
         {% if user.is_authenticated %}
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="">
+            <a class="navbar-link" href="{% url "registrar_overview" %}">
               Registry
             </a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">
+              <a class="navbar-item" href="">
                 Query
               </a>
               <a class="navbar-item" href="#registry-ingest-new">
                 Datasets
               </a>
-              <a class="navbar-item">
+              <a class="navbar-item" href="{% url "registrar_ingest" %}">
                 Ingest data
               </a>
             </div>

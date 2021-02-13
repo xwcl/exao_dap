@@ -25,16 +25,18 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'exao_dap.registrar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
     'social_django',
     'django_extensions',
-    # 'exao_dap.registrar',
     # 'exao_dap.undertaker',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'exao_dap.urls'
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 TEMPLATES = [
     {
@@ -115,14 +119,15 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_URL = '/accounts/login/'
+# LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/login/cyverse-oauth2/'
 LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_CYVERSE_OAUTH2_KEY = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_KEY')
 SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET')
-
-IRODS_USER_NAME = 'exao_dap'
-IRODS_ZONE_NAME = 'iplant'
-IRODS_PASSWORD = os.environ.get('DAP_IRODS_PASSWORD')
-IRODS_HOST = 'data.cyverse.org'
-IRODS_PORT = 1247
+IRODS_URL = os.environ.get('DAP_IRODS_URL', 'irods://data.cyverse.org/iplant/home/exao_dap')
+REGISTRAR_IGNORED_FILES = set(['.DS_Store'])
+Q_CLUSTER = {
+    'name': 'exao_dap',
+    'orm': 'default',
+}

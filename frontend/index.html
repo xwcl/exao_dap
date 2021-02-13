@@ -94,8 +94,10 @@
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="">
-            <div style="display: inline-block; vertical-align: middle; background: url(http://placehold.it/32x32) center; border-radius: 100%; width: 0; height: 0; padding: 16px; margin-right: 0.5rem;"></div>
-            User F. Name
+              <div
+                style="display: inline-block; vertical-align: middle; background: url(http://placehold.it/32x32) center; border-radius: 100%; width: 0; height: 0; padding: 16px; margin-right: 0.5rem;">
+              </div>
+              User F. Name
             </a>
             <div class="navbar-dropdown">
               <a class="navbar-item">
@@ -139,7 +141,8 @@
             <ul>
               <li>Store your data in the cloud with CyVerse, then use its metadata to select files for analysis.</li>
               <li>Manage calibrations, reference files, scientific data, and post-processing products.</li>
-              <li>Private by default, but contributing your data to big data efforts in astronomical high-contrast imaging is as easy as checking a box.</li>
+              <li>Private by default, but contributing your data to big data efforts in astronomical high-contrast
+                imaging is as easy as checking a box.</li>
             </ul>
           </div>
         </div>
@@ -151,8 +154,10 @@
           <div class="content">
             <ul>
               <li>Analyze across a grid of parameters to find the optimal set</li>
-              <li>Use our analysis code, or bring your own with <a class="has-text-link-light" href="">Singularity</a> and Docker containers</li>
-              <li>Leverage high performance computers through the <a class="has-text-link-light" href="">Open Science Grid</a></li>
+              <li>Use our analysis code, or bring your own with <a class="has-text-link-light" href="">Singularity</a>
+                and Docker containers</li>
+              <li>Leverage high performance computers through the <a class="has-text-link-light" href="">Open Science
+                  Grid</a></li>
             </ul>
           </div>
         </div>
@@ -169,7 +174,8 @@
         <li><a href="">Feedback</a></li>
       </ul>
       <p>
-        Built at the <a href="">Extreme Wavefront Control Lab</a> of <a href="">Steward Observatory</a> at the <a href="">The University of Arizona</a>. Home of the MagAO and MagAO-X instruments.
+        Built at the <a href="">Extreme Wavefront Control Lab</a> of <a href="">Steward Observatory</a> at the <a
+          href="">The University of Arizona</a>. Home of the MagAO and MagAO-X instruments.
       </p>
     </div>
   </footer>
@@ -180,76 +186,76 @@
     </h1>
   </section>
   <section class="section container has-background-primary-light">
-      <div class="field">
-        <label>
-          <span class="label">Uploading user</span>
-          <div class="control">
-            <input class="input" type="text" placeholder="/iplant/home/exao_dap/data/mine">
-          </div>
-        </label>
-      </div>
-      <div class="field">
-        <label>
-          <span class="label">Limit to datasets</span>
-          <div class="control">
-            <input class="input" type="text" placeholder="males_2015_sirius">
-          </div>
-        </label>
-      </div>
-      <div class="field">
-        <label>
-          <span class="label">Datum kind</span>
-          <div class="control">
-            <label class="radio">
-              <input type="radio" name="rsvp">
-              <span class="tag is-warning">calibration</span>
-            </label>
-            <label class="radio">
-              <input type="radio" name="rsvp">
-              <span class="tag is-info">reference</span>
-            </label>
-            <label class="radio">
-              <input type="radio" name="rsvp">
-              <span class="tag is-black">on-sky</span>
-            </label>
-            <label class="radio">
-              <input type="radio" name="rsvp">
-              <span class="tag is-light">simulation</span>
-            </label>
-          </div>
-        </label>
-      </div>
-      <div class="field">
-        <label>
-          <span class="label">Creation date</span>
-          <div class="control">
-            Foo
-          </div>
-        </label>
-      </div>
-      <div class="field">
-        <span class="label">Metadata constraints</span>
-        <p class="help mb-3">Datum must satisfy all of the constraints below to be selected</p>
-        <ol class="constraints">
-          <li class="constraint"><input class="input" value="fits.*.PARANG"> is <div class="select">
-              <select>
-                <option>between</option>
-                <option>With options</option>
-              </select>
-            </div> <input class="input" value="0"> and <input class="input" value="1">
-            <button class="button is-danger">
-              <span class="icon is-small">
-                <i class="fas fa-trash-alt"></i>
-              </span>
-            </button>
-          </li>
-        </ol>
-        <div class="buttons are-small">
-          <button class="button is-primary is-rounded">+ has metadata key</button>
-          <button class="button is-primary is-rounded">+ limit value range</button>
-          <button class="button is-primary is-rounded">+ limit set of values</button>
-          <button class="button is-primary is-rounded">+ value must exactly equal</button>
+    <div class="field">
+      <label>
+        <span class="label">Uploading user</span>
+        <div class="control">
+          <input class="input" type="text" placeholder="/iplant/home/exao_dap/data/mine">
         </div>
+      </label>
+    </div>
+    <div class="field">
+      <label>
+        <span class="label">Limit to datasets</span>
+        <div class="control">
+          <input class="input" type="text" placeholder="males_2015_sirius">
+        </div>
+      </label>
+    </div>
+    <div class="field">
+      <label>
+        <span class="label">Datum kind</span>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="rsvp">
+            <span class="tag is-warning">calibration</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="rsvp">
+            <span class="tag is-info">reference</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="rsvp">
+            <span class="tag is-black">on-sky</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="rsvp">
+            <span class="tag is-light">simulation</span>
+          </label>
+        </div>
+      </label>
+    </div>
+    <div class="field">
+      <label>
+        <span class="label">Creation date</span>
+        <div class="control">
+          Foo
+        </div>
+      </label>
+    </div>
+    <div class="field">
+      <span class="label">Metadata constraints</span>
+      <p class="help mb-3">Datum must satisfy all of the constraints below to be selected</p>
+      <ol class="constraints">
+        <li class="constraint"><input class="input" value="fits.*.PARANG"> is <div class="select">
+            <select>
+              <option>between</option>
+              <option>With options</option>
+            </select>
+          </div> <input class="input" value="0"> and <input class="input" value="1">
+          <button class="button is-danger">
+            <span class="icon is-small">
+              <i class="fas fa-trash-alt"></i>
+            </span>
+          </button>
+        </li>
+      </ol>
+      <div class="buttons are-small">
+        <button class="button is-primary is-rounded">+ has metadata key</button>
+        <button class="button is-primary is-rounded">+ limit value range</button>
+        <button class="button is-primary is-rounded">+ limit set of values</button>
+        <button class="button is-primary is-rounded">+ value must exactly equal</button>
+      </div>
   </section>
 
   <!-- begin body -->
@@ -296,8 +302,8 @@
     <div class="column">
       <h1 class="is-size-3">Annotate your dataset with metadata</h1>
       <div class="content">
-        <p>Designate each file as one of <span class="tag is-warning">calibration</span>, <span
-            class="tag is-info">reference</span>, <span class="tag is-black">on sky</span>, or <span
+        <p>Designate each file as one of <span class="choice choice-calibration">calibration</span>, <span
+            class="choice choice-reference">reference</span>, <span class="tag is-orange">on sky</span>, or <span
             class="tag is-light">simulation</span> while the platform retrieves each file's <a href="">embedded
             metadata</a>. (This may take a while!) You can optionally add a text description. There's no set format, but
           you may want to include comments on observing conditions, input parameters, or the like.</p>
@@ -324,6 +330,29 @@
           </div>
           <div class="field">
             <label>
+              <span class="label">Source</span>
+              <div id="id_source" class="control radio">
+                <label class="radio" for="id_source_0">
+                  <input type="radio" name="source" value="onsky" required="" id="id_source_0">
+                  <span class="choice choice-onsky">on sky</span>
+                </label>
+                <label class="radio" for="id_source_1">
+                  <input type="radio" name="source" value="post" required="" id="id_source_1">
+                  <span class="choice choice-post">postprocessed</span>
+                </label>
+                <label class="radio" for="id_source_2">
+                  <input type="radio" name="source" value="lab" required="" id="id_source_2">
+                  <span class="choice choice-lab">lab</span>
+                </label>
+                <label class="radio" for="id_source_3">
+                  <input type="radio" name="source" value="simulation" required="" id="id_source_3">
+                  <span class="choice choice-simulation">simulation</span>
+                </label>
+              </div>
+            </label>
+          </div>
+          <div class="field">
+            <label>
               <span class="label">Description</span>
               <div class="control">
                 <textarea class="textarea"></textarea>
@@ -335,9 +364,26 @@
           <div class="label">Dataset</div>
           <h3 class="heading">Mark all:</h3>
           <div class="block">
-            <p><button class="button is-small is-warning">calibration</button> <button
-                class="button is-small is-info">reference</button> <button class="button is-small is-primary">on
-                sky</button></p>
+            <p>
+              <script type="text/javascript">
+                function toggleAllRadioButtons(value) {
+                  document.querySelectorAll(`input[value="${value}"]`).forEach(x => x.click());
+                }
+              </script>
+
+              <button type="button" onclick="toggleAllRadioButtons('science')"
+                class="button is-small choice-science">science</button>
+
+              <button type="button" onclick="toggleAllRadioButtons('calibration')"
+                class="button is-small choice-calibration">calibration</button>
+
+              <button type="button" onclick="toggleAllRadioButtons('reference')"
+                class="button is-small choice-reference">reference</button>
+
+              <button type="button" onclick="toggleAllRadioButtons('ignore')"
+                class="button is-small choice-ignore">ignore</button>
+
+            </p>
           </div>
           <div class="block">
             <table class="table is-striped is-hoverable is-fullwidth">
@@ -355,71 +401,31 @@
               </tfoot>
               <tbody>
                 <tr>
-                  <td>frame_0001.fits</td>
+                  <td>OmiGru39rot_00001.fit</td>
                   <td>
-                    <div class="control">
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-warning">calibration</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-info">reference</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-black">on-sky</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-light">simulation</span>
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>frame_0002.fits</td>
-                  <td>
-                    <div class="control">
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-warning">calibration</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-info">reference</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-black">on-sky</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-light">simulation</span>
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>frame_0003.fits</td>
-                  <td>
-                    <div class="control">
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-warning">calibration</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-info">reference</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-black">on-sky</span>
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="rsvp">
-                        <span class="tag is-light">simulation</span>
-                      </label>
+                    <div class="control radio">
+                      <div id="id_datum_OmiGru39rot_00001.fit" class="control">
+                        <label class="radio" for="id_datum_OmiGru39rot_00001.fit_0">
+                          <input type="radio" name="datum_OmiGru39rot_00001.fit" value="science" required=""
+                            id="id_datum_OmiGru39rot_00001.fit_0">
+                          <span class="choice choice-science">science</span>
+                        </label>
+                        <label class="radio" for="id_datum_OmiGru39rot_00001.fit_1">
+                          <input type="radio" name="datum_OmiGru39rot_00001.fit" value="calibration" required=""
+                            id="id_datum_OmiGru39rot_00001.fit_1">
+                          <span class="choice choice-calibration">calibration</span>
+                        </label>
+                        <label class="radio" for="id_datum_OmiGru39rot_00001.fit_2">
+                          <input type="radio" name="datum_OmiGru39rot_00001.fit" value="reference" required=""
+                            id="id_datum_OmiGru39rot_00001.fit_2">
+                          <span class="choice choice-reference">reference</span>
+                        </label>
+                        <label class="radio" for="id_datum_OmiGru39rot_00001.fit_3">
+                          <input type="radio" name="datum_OmiGru39rot_00001.fit" value="ignore" required=""
+                            id="id_datum_OmiGru39rot_00001.fit_3" checked="">
+                          <span class="choice choice-ignore">ignore</span>
+                        </label>
+                      </div>
                     </div>
                   </td>
                 </tr>

@@ -11,7 +11,15 @@
 
 <body>
   {% include "includes/top_navbar.html" %}
-  {% block "content" %}{% endblock %}
+  {% block "outside_container" %}
+  <div class="container">
+    {% block "container" %}
+    <div class="content">
+    {% block "content" %}{% endblock %}
+    </div>
+    {% endblock %}
+  </div>
+  {% endblock %}
   <footer class="footer mt-4">
     <div class="content has-text-centered">
       <ul class="inline">

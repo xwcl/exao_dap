@@ -23,6 +23,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('registrar/', include('exao_dap.registrar.urls')),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('', include('social_django.urls', namespace='social')),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),

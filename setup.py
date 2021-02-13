@@ -36,7 +36,8 @@ setup(
         'django-extensions>=3.1.0,<4',
         'gunicorn>=20.0,<21',
         'fsspec>=0.8.5,<0.9',
-        'irods-fsspec'
+        'irods-fsspec',
+        'django-q>=1.3.4,<1.4'
     ],
     package_data={
         PROJECT: ['VERSION'],

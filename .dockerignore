@@ -5,9 +5,12 @@ secrets/
 env/
 state/
 # cruft
+.vscode/
 __pycache__
 .DS_Store
+exao_dap.egg-info/
 frontend/node_modules
+frontend/dist
 frontend/.cache
 frontend/.parcel-cache
 frontend/yarn-error.log
