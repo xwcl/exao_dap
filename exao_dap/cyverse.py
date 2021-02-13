@@ -99,15 +99,12 @@ def irods_get_fs():
 
 def irods_check_access(path):
     import time
-    start = time.perf_counter()
     fs = irods_get_fs()
     try:
         exists = fs.exists(path)
         found = True
     except FileNotFoundError as e:
         found = False
-    duration = time.perf_counter() - start
-    print(f'Testing access to {path} too {duration} sec')
     return found
     
 

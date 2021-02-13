@@ -71,7 +71,6 @@ class IngestForm(forms.Form):
         self.data_kind_field_names = []
         # Add radio buttons for each file
         self.data_kinds = models.Datum.DatumKind.choices + [('ignore', 'ignore')]
-        print(repr(self.data_kinds))
         for filename in utils.sorted_filenames(contents):
             field = forms.ChoiceField(
                 label=filename,
