@@ -21,11 +21,14 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+INTERNAL_IPS = ['127.0.0.1']
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'exao_dap.registrar',
+    # 'exao_dap.undertaker',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,7 +38,8 @@ INSTALLED_APPS = [
     'django.forms',
     'social_django',
     'django_extensions',
-    # 'exao_dap.undertaker',
+    'django_filters',
+    'rest_framework',
     'django_q',
 ]
 
@@ -130,4 +134,19 @@ REGISTRAR_IGNORED_FILES = set(['.DS_Store'])
 Q_CLUSTER = {
     'name': 'exao_dap',
     'orm': 'default',
+}
+
+DEBUG = os.environ.get('DAP_DEBUG') is not None
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    # Django Debug Toolbar
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ]
 }

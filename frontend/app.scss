@@ -31,8 +31,12 @@ button {
     }
 }
 
-
-.choice {
+table.table {
+    td {
+        vertical-align: middle;
+    }
+}
+.radio .choice {
     @extend .tag;
     &.choice-science {
         @extend .is-primary;
@@ -44,16 +48,16 @@ button {
         @extend .is-purple;
     }
     &.choice-onsky {
-        @extend .is-primary;
+        @extend .is-black;
     }
     &.choice-post {
-        @extend .is-green;
+        @extend .is-yellow;
     }
     &.choice-lab {
-        @extend .is-purple;
+        @extend .is-orange;
     }
     &.choice-simulation {
-        @extend .is-yellow;
+        @extend .is-white;
     }
 }
 

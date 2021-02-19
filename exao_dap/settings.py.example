@@ -9,6 +9,6 @@ DATABASES = {
         'NAME': '/var/lib/exao_dap/db.sqlite3',
     }
 }
-DEBUG = os.environ.get('DAP_DEBUG') is not None
+
 SECRET_KEY = os.environ.get('DAP_SECRET_KEY')
 STATIC_ROOT = os.environ.get('DAP_STATIC_ROOT', '/var/lib/exao_dap/static')

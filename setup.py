@@ -14,7 +14,8 @@ with open(path.join(HERE, PROJECT, 'VERSION'), encoding='utf-8') as f:
 extras = {
     'dev': [
         'pytest',
-        'werkzeug>=1.0.1,<2'
+        'werkzeug>=1.0.1,<2',
+        'django-debug-toolbar>=3.2,<4.0',
     ],
 }
 all_deps = set()
@@ -37,7 +38,10 @@ setup(
         'gunicorn>=20.0,<21',
         'fsspec>=0.8.5,<0.9',
         'irods-fsspec',
-        'django-q>=1.3.4,<1.4'
+        'django-q>=1.3.4,<1.4',
+        'djangorestframework>=3.12.2,<4.0',
+        # 'drf-writable-nested>=0.6.2,<0.7',
+        'django-filter-2.4.0',
     ],
     package_data={
         PROJECT: ['VERSION'],

@@ -21,7 +21,14 @@ from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 
+from rest_framework import routers
+router = routers.SimpleRouter()
+from .registrar import views as registrar_views
+router.register(r'registrar/datasets', registrar_views.DataSetViewSet)
+router.register(r'registrar/data', registrar_views.DatumViewSet)
+
 urlpatterns = [
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('registrar/', include('exao_dap.registrar.urls')),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
@@ -31,3 +38,6 @@ urlpatterns = [
     path('', views.home, name='home'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls)),]

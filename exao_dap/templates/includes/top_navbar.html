@@ -1,5 +1,5 @@
 {% load static %}
-  <div class="container mb-6">
+  <div class="container mb-2">
     <nav class="navbar" id="top-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item has-text-primary" href="/">
@@ -24,13 +24,13 @@
             </a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item" href="">
-                Query
+              <a class="navbar-item" href="{% url "datum-list" %}">
+                Query all
               </a>
-              <a class="navbar-item" href="#registry-ingest-new">
+              <a class="navbar-item" href="{% url "dataset-list" %}">
                 Datasets
               </a>
-              <a class="navbar-item" href="{% url "registrar_ingest" %}">
+              <a class="navbar-item" href="{% url "dataset-ingest" %}">
                 Ingest data
               </a>
             </div>

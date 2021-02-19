@@ -98,14 +98,8 @@ def irods_get_fs():
     return _LOCAL.irodsfs
 
 def irods_check_access(path):
-    import time
     fs = irods_get_fs()
-    try:
-        exists = fs.exists(path)
-        found = True
-    except FileNotFoundError as e:
-        found = False
-    return found
+    return fs.exists(path)
     
 
 class CyVerseOAuth2(BaseOAuth2):

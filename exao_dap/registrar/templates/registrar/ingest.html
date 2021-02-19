@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block "outside_container" %}
-  <section class="section columns"><div class="container">
+<div class="container">
     <h1 class="title column is-offset-2" id="registry-ingest-new">
       Ingest new dataset
     </h1>
-  </div></section>
+  </div>
+  {% comment %} <section class="section columns"></section> {% endcomment %}
   {% comment %} begin path verify form {% endcomment %}
-  {% if verify_form %}<form action="#verify" method="GET">{% endif %}
+  {% if verify_form %}<form action="{% url "dataset-ingest" %}" method="GET">{% endif %}
   <section class="section has-background-primary-light"><div class="container"><div class="columns">
     <div class="column is-2 is-size-3 has-text-right">1.</div>
     <div class="column">
@@ -43,7 +44,7 @@
         </label>
         
       </div>
-      <a href="{% url 'registrar_ingest' %}" class="button">Use a different path</a>
+      <a href="{% url 'dataset-ingest' %}" class="button">Use a different path</a>
       {% endif %}
     </div>
   </div></div></section>
@@ -54,26 +55,26 @@
       {% if verify_form %}
       <p class="block">The platform connects to the Data Store as <code>exao_dap</code>, and the path you
         enter must be readable by the platform user. 
-         If you have iRODS iCommands installed on your computer, you can grant
-          permission with</p>
-            <pre class="block">ichmod -r read exao_dap {{ path }}</pre>
+        If you have iRODS iCommands installed on your computer, you can grant
+        permission with</p>
+      <pre class="block">ichmod -r read exao_dap {% if path %}{{ path }}{% else %}/the/irods/path{% endif %}</pre>
       <p class="block"><strong>Proprietary data?</strong> Datasets you add to the registry are private to your CyVerse
         login by default, but can be made public later.</p>
 
-      <button type="submit" class="block button is-large is-warning">Verify</button>
       {{ verify_form.non_field_errors }}
       {% for err in verify_form.path.errors %}
-        <div class="notification block has-background-warning-dark has-text-white-ter content">
+      <div class="notification block has-background-warning-dark has-text-white-ter content">
         <p>{{ err }}</p>
       </div>
       {% endfor %}
+      <input type="submit" class="block button is-large is-warning" value="Verify">
       {% endif %}
     </div>
   </div></div></section>
   {% if verify_form %}</form>{% endif %}
   {% comment %} end path verify form {% endcomment %}
   {% comment %} begin ingest form {% endcomment %}
-  {% if ingest_form %}<form action="" method="POST">{% endif %}
+  {% if ingest_form %}<form action="" method="POST">{% csrf_token %}{% endif %}
   <section class="section columns has-background-success-light"><div class="container"><div class="columns">
     <div class="column is-2 is-size-3 has-text-right">3.</div>
     <div class="column">
@@ -86,12 +87,32 @@
           comments on observing conditions, input parameters, or the like.</p>
       </div>
       {% if ingest_form %}
+      <div class="block">
+      {{ ingest_form.non_field_errors }}
+      </div>
       {% for hidden in ingest_form.hidden_fields %}
       {{ hidden }}
       {% endfor %}
       <div class="columns">
         <div class="column is-one-third">
-          {{ ingest_form.non_field_errors }}
+          <div class="radio field">
+            <label>
+              <span class="label">Source</span>
+              {{ ingest_form.source }}
+              {% for err in ingest_form.name.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
+          <div class="radio field">
+            <label>
+              <span class="label">Stage</span>
+              {{ ingest_form.stage }}
+              {% for err in ingest_form.stage.errors %}
+              <p class="help is-danger">{{ err }}</p>
+              {% endfor %}
+            </label>
+          </div>
           <div class="field">
             <label>
               <span class="label">Name</span>
@@ -125,15 +146,6 @@
                 <p class="help">Must be unique. Use letters, numbers, and underscores.</p>
               </div>
               {% for err in ingest_form.identifier.errors %}
-              <p class="help is-danger">{{ err }}</p>
-              {% endfor %}
-            </label>
-          </div>
-          <div class="field">
-            <label>
-              <span class="label">Source</span>
-              {{ ingest_form.source }}
-              {% for err in ingest_form.name.errors %}
               <p class="help is-danger">{{ err }}</p>
               {% endfor %}
             </label>

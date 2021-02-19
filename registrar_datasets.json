@@ -1,0 +1,64 @@
+[
+    {
+        "model": "registrar.dataset",
+        "pk": "asfdsaf",
+        "fields": {
+            "friendly_name": "asdasdas",
+            "source": "lab",
+            "stage": "calibrated",
+            "created_at": "2021-02-16T04:22:26.582Z",
+            "source_path": "/asdasd",
+            "state": "committed",
+            "owner": 1,
+            "public": true,
+            "shared": []
+        }
+    },
+    {
+        "model": "registrar.dataset",
+        "pk": "foo2",
+        "fields": {
+            "friendly_name": "Foo 2",
+            "source": "onsky",
+            "stage": "calibrated",
+            "created_at": "2021-02-16T04:21:54.901Z",
+            "source_path": "/heck2/a",
+            "state": "ingesting",
+            "owner": 1,
+            "public": false,
+            "shared": [
+                2
+            ]
+        }
+    },
+    {
+        "model": "registrar.dataset",
+        "pk": "foobar",
+        "fields": {
+            "friendly_name": "Foo Bar",
+            "source": "onsky",
+            "stage": "raw",
+            "created_at": "2021-02-16T04:20:19.151Z",
+            "source_path": "/heck",
+            "state": "committed",
+            "owner": 1,
+            "public": false,
+            "shared": []
+        }
+    },
+    {
+        "model": "registrar.dataset",
+        "pk": "grumbl",
+        "fields": {
+            "friendly_name": "Grumbl;e",
+            "source": "lab",
+            "stage": "reduced",
+            "created_at": "2021-02-16T04:32:17.264Z",
+            "source_path": "/asdf/afasd",
+            "state": "ingesting",
+            "owner": 2,
+            "public": true,
+            "shared": []
+        }
+    }
+]

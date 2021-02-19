@@ -3,7 +3,6 @@ ADD ./frontend /frontend
 WORKDIR /frontend
 # alpine lacks bash but we're not using bashisms
 RUN sh -x ./build-assets.sh
-# RUN rm -rf node_modules .cache .parcel-cache yarn-error.log
 FROM python:latest@sha256:ca8bd3c91af8b12c2d042ade99f7c8f578a9f80a0dbbd12ed261eeba96dd632f
 ADD README.md VERSION init-python.sh manage.py setup.py /exao_dap/
 ADD exao_dap /exao_dap/exao_dap
