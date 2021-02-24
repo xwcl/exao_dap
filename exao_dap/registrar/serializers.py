@@ -25,7 +25,7 @@ class DataSetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataSet
-        fields = ['identifier', 'friendly_name', 'source', 'state',
+        fields = ['identifier', 'friendly_name', 'source', 'state', 'owner',
                   'stage', 'source_path', 'datum_set', 'shared', 'public']
         depth = 1
 

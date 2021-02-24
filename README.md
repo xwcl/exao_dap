@@ -1,4 +1,6 @@
-# The ExAO Data Analysis Platform web application
+# The ExAO Data Analysis Platform: service component
+
+The web services here provide access to a registry of datasets and a grid execution platform deployed at https://dap.xwcl.science.
 
 ## Secrets
 
@@ -17,13 +19,13 @@ GET ingest/
 GET ingest/?path=foo
 POST ingest/
 GET <pk>/
-POST <pk>/commit/
+POST <pk>/finalize/
 
 end user API:
 
 POST ingest/  with optional webhook
 GET <pk>
-POST <pk>/commit  (validate no datums in syncing/new)
+POST <pk>/finalize/  (commit or discard; cancel workers if needed)
 
 internal API:
 

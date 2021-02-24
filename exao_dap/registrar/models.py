@@ -76,3 +76,5 @@ class Datum(models.Model):
     imported_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(null=True)  # this should be inferred from metadata when available, otherwise use imported_at
     metadata = models.JSONField(blank=True)
+    class Meta:
+        verbose_name_plural = "data"

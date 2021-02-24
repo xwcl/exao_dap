@@ -11,13 +11,14 @@ from .forms import IngestPathVerifyForm, IngestForm, IngestCommitForm
 from .. import cyverse
 
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import renderer_classes
 from rest_framework.response import Response
 from .models import DataSet, Datum
 from .serializers import DataSetSerializer, DatumSerializer
-
+from .. import extensions
 
 from rest_framework import permissions
 
@@ -57,8 +58,13 @@ class DataSetViewSet(viewsets.ModelViewSet):
     }
 
     def get_queryset(self):
+        # unauthenticated: just public stuff
         qs = DataSet.objects.filter(public=True, state=DataSet.DataSetState.COMMITTED)
         if self.request.user.is_authenticated:
+            # superusers: everything
+            if self.request.user.is_superuser or self.request.user.is_staff:
+                return self.queryset
+            # normal users: things shared with them or owned by them
             return (qs |
                     DataSet.objects.filter(owner=self.request.user) |
                     DataSet.objects.filter(shared=self.request.user))
@@ -108,11 +114,12 @@ class DataSetViewSet(viewsets.ModelViewSet):
 
 
 
-class DatumViewSet(viewsets.ReadOnlyModelViewSet):
+class DatumViewSet(extensions.BrowserFacingMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = DatumSerializer
     queryset = Datum.objects.all()
-    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-    template_name = 'registrar/datum.html'
+    # renderer_classes = [TemplateRenderer, JSONRenderer]
+    # renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
+    # template_name = 'registrar/datum.html'
 
     def get_queryset(self):
         qs = Datum.objects.filter(dataset__public=True)
@@ -124,14 +131,17 @@ class DatumViewSet(viewsets.ReadOnlyModelViewSet):
         qs = qs.filter(dataset__state=DataSet.DataSetState.COMMITTED)
         return qs
 
-    @action(detail=False, methods=['GET'])
-    def processing(self):
+    @action(
+        detail=False, methods=['GET'],
+        permission_classes=[IsAuthenticated]
+    )
+    def processing(self, request):
         # dataset owners can see their data that's still being processed here
         # but otherwise only committed datasets are visible
-        return self.queryset.filter(
+        return Response(self.queryset.filter(
             dataset__owner=self.request.user,
             state__in=[Datum.DatumState.SYNCING, Datum.DatumState.NEW]
-        )
+        ), template_name='datum_processing.html')
 
 @login_required
 def overview(request):
