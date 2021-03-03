@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_q',
 ]
 
@@ -150,3 +151,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ]
 }
+
+SENTRY_DSN = os.environ.get('DAP_SENTRY_DSN')
+

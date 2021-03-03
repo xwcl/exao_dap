@@ -66,3 +66,22 @@ table.table {
     margin: 0.25em;
     // margin-right: 0.25em;
 }
+
+.side-by-side {
+    display: flex;
+    .side {
+        &.flex {flex: 1;}
+        &:nth-child(2) {
+            text-align: right;
+        }
+    }
+}
+
+.no-data {
+    @extend .py-6;
+    @extend .px-6;
+    @extend .has-background-light;
+    div {
+        @extend .content;
+    }
+}

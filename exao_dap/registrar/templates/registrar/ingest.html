@@ -19,12 +19,12 @@
         <label>
           <span class="label">{{ verify_form.path.label }}</span>
           <div class="control">
-            <input 
+            <input
               class="input"
               type="text"
               placeholder="/iplant/home/exao_dap/data/mine"
-              name="path"
-              value="{{ verify_form.path.value|default:"" }}"
+              name="source_path"
+              value="{{ verify_form.source_path.value|default:"" }}"
             >
           </div>
         </label>
@@ -34,15 +34,15 @@
         <label>
           <span class="label">CyVerse Data Store path</span>
           <div class="control">
-            <input 
+            <input
               class="input"
               type="text"
               disabled
-              value="{{ path }}"
+              value="{{ source_path }}"
             >
           </div>
         </label>
-        
+
       </div>
       <a href="{% url 'dataset-ingest' %}" class="button">Use a different path</a>
       {% endif %}
@@ -54,15 +54,15 @@
       <h1 class="is-size-3">Verify that the platform can see your dataset</h1>
       {% if verify_form %}
       <p class="block">The platform connects to the Data Store as <code>exao_dap</code>, and the path you
-        enter must be readable by the platform user. 
+        enter must be readable by the platform user.
         If you have iRODS iCommands installed on your computer, you can grant
         permission with</p>
-      <pre class="block">ichmod -r read exao_dap {% if path %}{{ path }}{% else %}/the/irods/path{% endif %}</pre>
+      <pre class="block">ichmod -r read exao_dap {% if source_path %}{{ source_path }}{% else %}/the/irods/path{% endif %}</pre>
       <p class="block"><strong>Proprietary data?</strong> Datasets you add to the registry are private to your CyVerse
         login by default, but can be made public later.</p>
 
       {{ verify_form.non_field_errors }}
-      {% for err in verify_form.path.errors %}
+      {% for err in verify_form.source_path.errors %}
       <div class="notification block has-background-warning-dark has-text-white-ter content">
         <p>{{ err }}</p>
       </div>
@@ -74,16 +74,16 @@
   {% if verify_form %}</form>{% endif %}
   {% comment %} end path verify form {% endcomment %}
   {% comment %} begin ingest form {% endcomment %}
-  {% if ingest_form %}<form action="" method="POST">{% csrf_token %}{% endif %}
+  {% if ingest_form %}<form action="{% url "dataset-list" %}" method="POST">{% csrf_token %}{% endif %}
   <section class="section columns has-background-success-light"><div class="container"><div class="columns">
     <div class="column is-2 is-size-3 has-text-right">3.</div>
     <div class="column">
       <h1 class="is-size-3">Annotate your dataset with metadata</h1>
       <div class="content">
-          <p>Every dataset must indicate whether it is simulated, on sky, 
+          <p>Every dataset must indicate whether it is simulated, on sky,
           in lab, or from post-processing.
-          You can optionally add a text description. 
-          There's no set format, but you may want to include 
+          You can optionally add a text description.
+          There's no set format, but you may want to include
           comments on observing conditions, input parameters, or the like.</p>
       </div>
       {% if ingest_form %}
@@ -120,13 +120,13 @@
                 <input
                   class="input"
                   type="text"
-                  name="name"
+                  name="friendly_name"
                   placeholder="Descriptive Name (spaces allowed)"
                   required
-                  value="{{ ingest_form.name.value|default:"" }}"
+                  value="{{ ingest_form.friendly_name.value|default:"" }}"
                 >
               </div>
-              {% for err in ingest_form.name.errors %}
+              {% for err in ingest_form.friendly_name.errors %}
               <p class="help is-danger">{{ err }}</p>
               {% endfor %}
             </label>
@@ -137,7 +137,7 @@
               <div class="control">
                 <input
                   class="input"
-                  type="text" 
+                  type="text"
                   name="identifier"
                   placeholder="my_data_set_id"
                   required
@@ -158,7 +158,7 @@
                   class="textarea"
                   name="description"
                   placeholder="It was a dark and not particularly stormy night..."
-                  required 
+                  required
                 ></textarea>
               </div>
               {% for err in ingest_form.description.errors %}
@@ -207,7 +207,7 @@
                 </tr>
               {% endif %}
               {% endfor %}
-{% comment %}               
+{% comment %}
                 <tr>
                   <td>frame_0002.fits</td>
                   <td>
@@ -267,8 +267,8 @@
     <div class="column">
       <h1 class="is-size-3">Ingest and confirm</h1>
       <p class="block">
-        When you submit your dataset for ingest, we will start recording the 
-        metadata from your files in our registry. When this is complete, you'll 
+        When you submit your dataset for ingest, we will start recording the
+        metadata from your files in our registry. When this is complete, you'll
         be notified automatically at {{ user.email }}.
       </p>
       {% if ingest_form %}<button class="button is-primary" type="submit">Ingest</button>{% endif %}

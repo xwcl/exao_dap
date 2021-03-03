@@ -1,19 +1,17 @@
-# -*- coding: utf-8 -*-
 from django.contrib import admin
+from .models import Dataset, Datum
 
-from .models import DataSet, Datum
 
-
-@admin.register(DataSet)
-class DataSetAdmin(admin.ModelAdmin):
+@admin.register(Dataset)
+class DatasetAdmin(admin.ModelAdmin):
     list_display = (
         'identifier',
         'friendly_name',
+        'description',
         'source',
         'stage',
         'created_at',
         'source_path',
-        'state',
         'owner',
         'public',
     )
@@ -25,13 +23,15 @@ class DataSetAdmin(admin.ModelAdmin):
 @admin.register(Datum)
 class DatumAdmin(admin.ModelAdmin):
     list_display = (
-        'path',
+        'id',
+        'filename',
+        'checksum',
         'dataset',
         'state',
         'kind',
         'imported_at',
         'created_at',
-        'metadata',
+        'meta',
     )
     list_filter = ('dataset', 'imported_at', 'created_at')
     date_hierarchy = 'created_at'

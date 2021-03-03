@@ -100,8 +100,9 @@
             <div class="navbar-dropdown">
             {% if user.is_staff or user.is_superuser %}
               <a class="navbar-item" href="{% url "admin:index" %}">Admin</a>
-              <hr class="navbar-divider">
             {% endif %}
+              <a class="navbar-item" href="{% url "user_profile" user.username %}">Account</a>
+              <hr class="navbar-divider">
               <a class="navbar-item" href="{% url "logout" %}">
                 Log out
               </a>

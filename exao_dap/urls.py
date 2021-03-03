@@ -19,22 +19,31 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
-from . import views
 
+from rest_framework.authtoken import views as authtoken_views
 from rest_framework import routers
-router = routers.SimpleRouter()
+
+from . import views
+from . import signals  # ensure registration at startup
 from .registrar import views as registrar_views
-router.register(r'registrar/datasets', registrar_views.DataSetViewSet)
+
+router = routers.SimpleRouter()
+router.register(r'registrar/datasets', registrar_views.DatasetViewSet)
 router.register(r'registrar/data', registrar_views.DatumViewSet)
+
+admin.site.site_header = 'DAP administration'
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('obtain-auth-token/', authtoken_views.obtain_auth_token),
     path('admin/', admin.site.urls),
     path('registrar/', include('exao_dap.registrar.urls')),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('', include('social_django.urls', namespace='social')),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('users/me/', views.redirect_to_profile, name='redirect_to_profile'),
+    path('users/<str:username>/', views.user_profile, name='user_profile'),
     path('', views.home, name='home'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

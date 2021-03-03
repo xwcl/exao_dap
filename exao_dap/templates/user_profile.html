@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block "content" %}
+  <h1>
+    {% if user_of_interest.get_full_name %} {{ user_of_interest.get_full_name }} ({% endif %}
+    <span class="is-family-monospace">{{ user_of_interest.username }}</span>
+    {% if user_of_interest.get_full_name %}){% endif %}
+  </h1>
+  <hr>
+    <div class="columns">
+      <div class="column is-6">
+        <div class="side-by-side">
+          <div class="side"><h1 class="has-text-warning">Registry</h1></div>
+          {% if is_me %}
+          <div class="side flex">
+            <a class="button is-rounded is-primary">Ingest new dataset</a>
+            <a class="button is-rounded is-primary">Design query</a>
+          </div>
+          {% endif %}
+        </div>
+      {% for object in datasets %}
+        {% include 'registrar/dataset_snippet.html' %}
+        {% empty %}
+        <p>No {% if not is_me %}public{% endif%} datasets to show.</p>
+      {% endfor %}
+      </div>
+      <div class="column is-6">
+        <div class="side-by-side">
+          <div class="side">
+            <h1 class="has-text-success">Undertakings</h1>
+          </div>
+          {% if is_me %}
+          <div class="side flex">
+            <a class="button is-rounded is-primary">Launch grid</a>
+            <a class="button is-rounded is-primary">Launch job</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+{% endblock "content" %}

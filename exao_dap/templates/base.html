@@ -12,6 +12,7 @@
 <body>
   {% include "includes/top_navbar.html" %}
   {% block "outside_container" %}
+  <section>
   <div class="container">
     {% block "container" %}
     <div class="content">
@@ -19,6 +20,7 @@
     </div>
     {% endblock %}
   </div>
+  </section>
   {% endblock %}
   <footer class="footer mt-4">
     <div class="content has-text-centered">
@@ -28,8 +30,12 @@
         <li><a href="">Feedback</a></li>
       </ul>
       <p>
-        Built at the <a href="">Extreme Wavefront Control Lab</a> of <a href="">Steward Observatory</a> at the <a href="">The University of Arizona</a>. Home of the MagAO and MagAO-X instruments.
+        Built at the
+        <a href="https://xwcl.science/" target="_blank">Extreme Wavefront Control Lab</a> of
+        <a href="https://as.arizona.edu/" target="_blank">Steward Observatory</a> at the
+        <a href="https://arizona.edu/">The University of Arizona</a>.
       </p>
+      <p>Home of the MagAO and MagAO-X instruments.</p>
     </div>
   </footer>
 

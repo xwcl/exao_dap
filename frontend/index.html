@@ -257,6 +257,39 @@
         <button class="button is-primary is-rounded">+ value must exactly equal</button>
       </div>
   </section>
+  <section class="section columns">
+    <div class="column is-6">
+      <div class="dataset box content">
+        <h3><a href="">{{ object.friendly_name }}</a></h3>
+        <div class="properties">
+          <div>Identifier</div>
+          <div><span class="is-family-monospace">{{ object.identifier }}</span></div>
+          <div>Visibility</div>
+          <div>
+            <i class="fas fa-unlock has-text-success"></i>
+            <i class="fas fa-lock"></i>
+          </div>
+
+        </div>
+        <div>
+          <span class="is-family-monospace">{{ object.identifier }}</span>
+          <i class="fas fa-unlock has-text-success"></i>
+          <i class="fas fa-lock"></i>
+          <div class="tag">{{ object.source }}</div>
+          <div class="tag">{{ object.stage }}</div>
+
+        </div>
+        <div>
+          Registered March 2, 2021, 12:09 a.m.
+          <span class="has-text-warning"><i class="fas fa-sync-alt"></i>
+            3 syncing</span>
+
+          <span class="has-text-success"><i class="fas fa-cloud"></i> 10 indexed</span>
+
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- begin body -->
   <section class="section columns">

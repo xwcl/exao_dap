@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block "outside_container" %}
-<section class="has-background-info" id="hero">
+{% if user %}
+  <section class="has-background-info" id="hero">
     <div class="container mt-6 mb-6 pt-6 pb-6">
       <h2 class="heading is-size-5 has-text-white-ter">Extreme Adaptive Optics</h2>
       <h1 class="title has-text-white">
@@ -48,4 +49,5 @@
       </section>
     </div>
   </div>
+  {% endif %}
 {% endblock %}

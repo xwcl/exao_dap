@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block "content" %}
+    <div class="columns">
+      <div class="column is-6">
+        <div class="side-by-side">
+          <div class="side"><h1 class="has-text-warning">Registry</h1></div>
+          <div class="side flex">
+            <a class="button is-rounded is-primary">Ingest new dataset</a>
+            <a class="button is-rounded is-primary">Design query</a>
+          </div>
+        </div>
+      {% for object in datasets %}
+        {% include 'registrar/dataset_snippet.html' %}
+        {% empty %}
+        <div class="no-data">
+            <div>
+            <h4>Getting started with the data registry</h4>
+            <ol>
+                <li>
+                    Install the client (unless you'd rather use the API directly)
+                    <pre>pip install exao_dap_client</pre>
+                </li>
+                <li>
+                    Copy data into the CyVerse Data Store with <code>dap_irods_sync</code>
+                    <pre>
+dap_irods_sync \
+    --user {{ user.username }} \
+    --host data.cyverse.org \
+    ./my/data/ \
+    /iplant/home/{{ user.username }}/my/data/
+                    </pre>
+                </li>
+                <li><a class="has-text-weight-bold" href="{% url "dataset-ingest" %}">Ingest</a> your data</li>
+            </ol>
+            <h4>Or, go directly to <a href="{% url "dataset-list" %}">querying</a> public and shared data</h4>
+
+            </div>
+        </div>
+      {% endfor %}
+      </div>
+      <div class="column is-6">
+        <div class="side-by-side">
+          <div class="side">
+            <h1 class="has-text-success">Undertakings</h1>
+          </div>
+          <div class="side flex">
+            <a class="button is-rounded is-primary">Launch grid</a>
+            <a class="button is-rounded is-primary">Launch job</a>
+          </div>
+        </div>
+        {% for x in None %}
+        {% empty %}
+        <div class="no-data">
+            <div>
+                <h4>Getting started</h4>
+                <ol>
+                    <li>
+                        Craft a <a href="{% url "dataset-list" %}">query</a> for data to analyze
+                    </li>
+                    <li>Wait for this part to be implemented
+                    </li>
+                </ol>
+
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+{% endblock "content" %}

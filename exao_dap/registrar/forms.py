@@ -18,9 +18,9 @@ def _clean_irods_ingest_path(data):
     return path
 
 class IngestPathVerifyForm(forms.Form):
-    path = forms.CharField(max_length=models.MAX_SUPPORTED_PATH_LENGTH, label='CyVerse Data Store path')
-    def clean_path(self):
-        data = self.cleaned_data['path']
+    source_path = forms.CharField(max_length=models.MAX_SUPPORTED_PATH_LENGTH, label='CyVerse Data Store path')
+    def clean_source_path(self):
+        data = self.cleaned_data['source_path']
         return _clean_irods_ingest_path(data)
 
 
@@ -34,27 +34,25 @@ class IngestForm(IngestPathVerifyForm):
 
     def clean_identifier(self):
         identifier = self.cleaned_data['identifier']
-        other_dataset = models.DataSet.objects.filter(
-            source_path=os.path.join(models.PATH_BASE, identifier)
-        )
+        other_dataset = models.Dataset.objects.filter(identifier=identifier)
         if other_dataset.exists():
             raise ValidationError(f"Identifier {identifier} is already in use by a dataset")
         return identifier
 
-    name = forms.CharField(
+    friendly_name = forms.CharField(
         max_length=models.MAX_IDENTIFIER_LENGTH,
     )
-    path = forms.CharField(
+    source_path = forms.CharField(
         widget=forms.HiddenInput(),
         max_length=models.MAX_IDENTIFIER_LENGTH,
     )
     source = forms.ChoiceField(
         widget=forms.widgets.RadioSelect(),
-        choices=models.DataSet.DataSetSource.choices
+        choices=models.Dataset.DatasetSource.choices
     )
     stage = forms.ChoiceField(
         widget=forms.widgets.RadioSelect(),
-        choices=models.DataSet.DataSetStage.choices
+        choices=models.Dataset.DatasetStage.choices
     )
     description = forms.CharField(
         widget=forms.Textarea(),
@@ -67,15 +65,15 @@ class IngestForm(IngestPathVerifyForm):
         self.user = user
         if cleaned_irods_path is None:
             # it better be in the request data then!
-            cleaned_irods_path = self.fields['path'].clean(self.data['path'])
+            cleaned_irods_path = self.fields['source_path'].clean(self.data['source_path'])
         self.cleaned_irods_path = cleaned_irods_path
         irodsfs = irods_get_fs()
-        contents = irodsfs.ls(cleaned_irods_path)
+        self.collection_contents = irodsfs.ls(cleaned_irods_path)
 
         # Add radio buttons for each file
         self.data_kind_field_names = []
         self.data_kinds = models.Datum.DatumKind.choices + [('ignore', 'ignore')]
-        for filename in utils.sorted_filenames(contents):
+        for filename in utils.sorted_filenames(self.collection_contents):
             field = forms.ChoiceField(
                 label=filename,
                 widget=forms.widgets.RadioSelect(),
@@ -97,8 +95,9 @@ class IngestForm(IngestPathVerifyForm):
 
     def get_initial_for_field(self, field, field_name):
         if field_name == 'identifier':
-            return re.sub(r'(/iplant/home/[^/]+/)', '', self.cleaned_irods_path).replace('/', '_')
-        elif field_name == 'path':
+            collection_part = re.sub(r'(/iplant/home/[^/]+/)', '', self.cleaned_irods_path).replace('/', '_')
+            return f'{self.user.username}_{collection_part}'
+        elif field_name == 'source_path':
             return self.cleaned_irods_path
         return super().get_initial_for_field(field, field_name)
 
@@ -117,26 +116,9 @@ class IngestForm(IngestPathVerifyForm):
                     'kind': self.cleaned_data[key]
                 }
                 payload['datum_set'].append(datum)
-            payload['state'] = models.DataSet.DataSetState.INGESTING
+            payload['owner'] = self.user.username
+            from pprint import pprint
+            pprint(payload)
             return payload
         else:
             raise RuntimeError("Trying to serialize contents of invalid form")
-
-class IngestCommitForm(IngestForm):
-    commit = forms.ChoiceField(label='Commit to datastore', choices=[(True, 'Commit'), (False, 'Discard')])
-
-    def clean_commit(self):
-        # guard against using this form to discard already-committed data
-        try:
-            models.DataSet.objects.get(
-                identifier=payload['identifier'],
-                owner=self.user,
-                state=models.DataSet.DataSetState.AWAITING_COMMIT
-            )
-        except models.DataSet.DoesNotExist:
-            raise ValidationError(f"No matching dataset awaiting commit")
-
-    def to_serializer_payload(self):
-        payload = super().to_serializer_payload()
-        payload['state'] = models.DataSet.DataSetState.COMMITTED
-        return payload

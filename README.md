@@ -31,7 +31,7 @@ internal API:
 
 (stage in data)
 POST /datasets/
-(begin syncing datums)
+(begin syncing data)
 
 Trigger summary job on completion? have sync tasks query for bigjobs that have this dataset identifier as input and trigger if prereqs are all met
 
@@ -42,15 +42,23 @@ GET -> path validate -> full form
 
 /registrar/datasets/<pk>/ (view, create with internal api client from jobs)
 GET -> template
-POST -> validate service account in DRF -> create dataset and datums -> launch ingest tasks for every datum
+POST -> validate service account in DRF -> create dataset and data -> launch ingest tasks for every datum
 
 states for a dataset:
 
 user-submitted (syncing) -> user-confirmed
 platform-submitted -> platform-complete
 
-/registrar/datasets/<pk>/commit/
-/registrar/data/
+/registrar/datasets/
+/registrar/datasets/ingest/
+/registrar/datasets/
+/registrar/datasets/<identifier>/data/<filename>/
+
+/registrar/query/
+
+/registrar/data/<pk>/
+/registrar/data/<pk>/view/
+/registrar/data/<pk>/download/
 /undertaker/grid/
 /undertaker/bigjob/
 ```
@@ -141,5 +149,69 @@ grid spec -> single job spec with filters -> job spec with data path mappings ->
     '--owapx',
     '30',
     '-D',
-    {'kind': 'folder', ['id1', 'id2', 'id3']},
+    {'kind': 'file', 'path': '/path/to...'},   # evaluate ACLs when generating, then the path can be just the path
+    {'kind': 'folder', ['/path/1', '/path/b/2', '/path/c/1']},
+
 ]
+
+
+## Template
+
+  * name
+  * template
+  * state [draft, finalized]
+
+## Job
+
+  * id
+  * template nullable
+  * spec
+  * state [draft, submitted, executing, failed, complete]
+
+## Stage in and stage out
+
+batch script looks like:
+
+DAP_TOKEN=token
+dap_execute https://dap.xwcl.science/jobs/id/
+
+### Stage in
+
+1. Invoke CLI client with token and job ID
+2. Retrieve job payload
+3. POST place job in 'executing'
+3. Construct command line:
+    * literal: push on to args list
+    * 'datum'
+        1. retrieve one file and store at unique path (checksum + extension), push path onto args list
+    * 'folder'
+        1. make unique folder name somehow
+        2. retrieve each file into that folder
+        3. push folder path onto args list
+4. Invoke container default entrypoint (make it an option?) with the constructed command line
+
+### Stage out
+
+1. Execution finishes without error (if error see below)
+2. Next step in batch script invokes CLI client with token, input dataset id, and destination dataset id
+3. Loop over list constructing payload for dataset creation with metadata in place
+    * If organized by 'kind' into folders then set field appropriately
+    * Using python-irodsclient or similar, place files in folder for destination dataset ID as they are processed (can be parallelized?)
+6. POST to create dataset and associated datum records through 'back door' using token
+7. POST to move job to finished state, record log
+---
+8. Back on the server side handle antecedent and webhook
+    * Select all jobs where this one was an antecedent and all antecedents are available, and trigger
+    * Hit webhook with notification
+
+#### If execution errors
+
+1. Trap exception / CalledProcessError
+2. POST to move job to failed state, record log
+
+
+## SLURM spy
+
+
+
+## OGS spy

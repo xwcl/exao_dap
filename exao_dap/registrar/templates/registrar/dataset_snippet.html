@@ -1,0 +1,22 @@
+<div class="dataset box">
+    <div class="side-by-side">
+        <h3 class="side"><a href="{% url "dataset-detail" object.pk %}">{{ object.friendly_name }}</a> (<span class="is-family-monospace">{{ object.identifier }}</span>)</h3>
+        <div class="side flex">
+        {% if object.public %}<span class="has-text-success"><i class="fas fa-unlock"></i> public</span>{% else %}
+        <span><i class="fas fa-lock"></i> private</span>
+        {% endif %}
+        </div>
+    </div>
+    <div>
+        <strong>Source:</strong> <span class="tag">{{ object.source }}</span>
+        <strong>Stage:</strong> <span class="tag">{{ object.stage }}</span>
+    </div>
+    <div class="side-by-side">
+        <div class="side"><strong>Registered:</strong> <time datetime="{{ object.created_at|date:"c" }}">{{ object.created_at }}</div>
+        <div class="side flex">{% if object.data_pending %}
+        <span class="has-text-warning"><i class="fas fa-sync-alt"></i> {{object.data_pending.count}} syncing</span>
+        {% else %}
+        <span class="has-text-primary"><i class="fas fa-cloud"></i> {{object.data_set.count}} indexed</span>
+        {% endif %}</div>
+    </div>
+</div>
