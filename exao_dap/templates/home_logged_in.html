@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block "full_title" %}XWCL Distributed Analysis Platform{% endblock %}
 {% block "container" %}
+  <div class="side-by-side">
+  <div class="side"><h1 class="is-size-3 has-text-weight-bold has-text-primary">{{ user.username }}</h1></div>
+  <div class="side flex is-family-monospace">API token: {{ user.auth_token }}</div>
+  </div>
     <div class="columns">
       <div class="column is-6">
         <div class="side-by-side my-2">
