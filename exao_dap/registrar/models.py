@@ -91,7 +91,7 @@ class Dataset(models.Model):
         elif user.is_authenticated and user.is_active:
             if user.is_superuser or user.is_staff:
                 return True
-            elif self.shared.filter(user=user).exists() or self.owner == user:
+            elif self.owner == user or user.datasets_shared.filter(pk=self.pk).exists():
                 return True
         return False
 

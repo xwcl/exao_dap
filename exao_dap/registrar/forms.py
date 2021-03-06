@@ -3,6 +3,7 @@ import os.path
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django import forms
+from django.forms.renderers import TemplatesSetting
 from . import models, utils
 from ..cyverse import irods_check_access, irods_get_fs, IRODS_HOME
 from .models import Dataset
@@ -26,6 +27,7 @@ class IngestPathVerifyForm(forms.Form):
 
 
 class IngestForm(IngestPathVerifyForm):
+    default_renderer = TemplatesSetting()
     identifier = forms.RegexField(
         regex=r'^[A-Za-z0-9_]+$',
         strip=True,

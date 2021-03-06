@@ -10,6 +10,8 @@ runserver:
 	./manage.py runserver_plus --nopin
 docker-build:
 	docker build . -t exao_dap
+docker-build-force:
+	docker build --no-cache . -t exao_dap
 dev-backend: dev-backend-stop docker-build
 	mkdir -p ./state/static/
 	rm -rf ./state/static/*
@@ -25,10 +27,10 @@ dev-backend: dev-backend-stop docker-build
 	docker exec dev_exao_dap env/bin/python manage.py migrate
 dev-backend-stop:
 	docker rm -f dev_exao_dap || true
-deploy: docker-build
+deploy: docker-build-force
 	docker tag exao_dap xwcl/exao_dap
 	docker push xwcl/exao_dap
 	ssh dap.xwcl.science sudo -u exao_dap -i podman pull xwcl/exao_dap
-	ssh dap.xwcl.science sudo systemctl restart podman-exao_dap exao_dap-setup
+	ssh dap.xwcl.science sudo systemctl restart podman-exao_dap exao_dap-setup exao_dap-qcluster
 
 .PHONY: all init-python build-assets serve deploy dev-frontend dev-backend docker-build

@@ -1,0 +1,35 @@
+{% extends "datum_list.html" %}
+{% block "title" %}Processing data{% endblock %}
+{% block "content_title" %}Processing data{% endblock %}
+{% block "content" %}
+<p>Between creating the dataset through the web interface or API,
+and it becoming available for queries and jobs, the platform must
+index it to extract metadata.</p>
+{% endblock %}
+{% block "table-header" %}
+    <th>Filename</th>
+    <th>Dataset</th>
+    <th>Source</th>
+    <th>Stage</th>
+    <th>Kind</th>
+    <th>Created</th>
+    <th>Imported</th>
+{% endblock %}
+{% block "table-entry" %}
+<tr>
+    <td>{{ object.filename }}</td>
+    <td><a href="{% url "dataset-detail" object.dataset.identifier %}">{{ object.dataset.identifier }}</a></td>
+    <td>{{ object.dataset.source }}</td>
+    <td>{{ object.dataset.stage }}</td>
+    <td>{{ object.kind }}</td>
+    <td>{{ object.created_at }}</td>
+    <td>{{ object.imported_at }}</td>
+</tr>
+<tr><td colspan="7" class="px-5"><details><summary>Metadata</summary>
+<pre>{{ object.meta|pprint }}</pre>
+</details></td></tr>
+{% endblock %}
+{% block "table-empty" %}
+<h4>No data waiting to be ingested</h4>
+
+{% endblock %}

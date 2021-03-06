@@ -56,8 +56,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'exao_dap.urls'
 
-FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

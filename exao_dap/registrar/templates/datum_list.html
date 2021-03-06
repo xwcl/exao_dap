@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block "title" %}Query data{% endblock "title" %}
+{% block "container" %}
+<div class="box has-background-warning-light content" style="height: 100%">
+<h1>{% block "content_title" %}Query data{% endblock %}</h1>
+<hr>
+{% block "content" %}
+{% if user.is_authenticated %}
+<p>
+    Data will be visible here if it belongs to your datasets or
+    datasets that have been shared with you (including public datasets).
+</p>
+
+{% else %}
+<p>Index of public data. Log in to ingest your own datasets and query datasets shared with you.</p>
+{% endif %}
+<style type="text/css" scoped>
+ul#id_kind li {display: inline; }
+</style>
+<form method="get">
+    {{ filterset.form.as_p }}
+    <input class="button is-primary" type="submit" />
+</form>
+{% endblock %}
+</div>
+<div class="table-container">
+<a class="button" href="{% url "datum-processing" %}">View your syncing data</a>
+<table class="table is-fullwidth">
+<thead>
+<tr>
+{% block "table-header" %}
+    <th>Filename</th>
+    <th>Dataset</th>
+    <th>Source</th>
+    <th>Stage</th>
+    <th>Kind</th>
+    <th>Created</th>
+    <th>Imported</th>
+{% endblock %}
+</tr>
+</thead>
+<tbody>
+{% for object in object_list %}
+{% block "table-entry" %}
+<tr>
+    <td>{{ object.filename }}</td>
+    <td><a href="{% url "dataset-detail" object.dataset.identifier %}">{{ object.dataset.identifier }}</a></td>
+    <td>{{ object.dataset.source }}</td>
+    <td>{{ object.dataset.stage }}</td>
+    <td>{{ object.kind }}</td>
+    <td>{{ object.created_at }}</td>
+    <td>{{ object.imported_at }}</td>
+</tr>
+<tr><td colspan="7" class="px-5">{% include "registrar/meta_snippet.html" %}
+</td></tr>
+{% endblock %}
+{% empty %}
+<tr><td colspan="7"><div class="no-data"><div>
+{% block "table-empty" %}
+{% endblock %}
+</div></div></td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}
