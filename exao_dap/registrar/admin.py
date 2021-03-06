@@ -7,11 +7,10 @@ class DatasetAdmin(admin.ModelAdmin):
     list_display = (
         'identifier',
         'friendly_name',
-        'description',
         'source',
         'stage',
+        'state',
         'created_at',
-        'source_path',
         'owner',
         'public',
     )
@@ -23,15 +22,14 @@ class DatasetAdmin(admin.ModelAdmin):
 @admin.register(Datum)
 class DatumAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'filename',
+        'size_bytes',
         'checksum',
         'dataset',
         'state',
         'kind',
         'imported_at',
         'created_at',
-        'meta',
     )
     list_filter = ('dataset', 'imported_at', 'created_at')
     date_hierarchy = 'created_at'

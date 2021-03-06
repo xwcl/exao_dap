@@ -81,11 +81,14 @@ _LOCAL = threading.local()
 #         'port': result.port if result.port is not None else IRODS_PORT,
 #     }
 from urllib.parse import urlparse
-IRODS_HOME = urlparse(settings.IRODS_URL).path
+_irods_url_parts = urlparse(settings.IRODS_URL_SECRET)
+IRODS_HOME = _irods_url_parts.path
+IRODS_HOST = _irods_url_parts.hostname
+IRODS_PORT = _irods_url_parts.port
 
 def irods_get_session():
     if not hasattr(_LOCAL, 'session'):
-        config = irods_fsspec.irods_config_from_url(settings.IRODS_URL)
+        config = irods_fsspec.irods_config_from_url(settings.IRODS_URL_SECRET)
         session = iRODSSession(**config)
         _LOCAL.session = session
     return _LOCAL.session
@@ -100,7 +103,7 @@ def irods_get_fs():
 def irods_check_access(path):
     fs = irods_get_fs()
     return fs.exists(path)
-    
+
 
 class CyVerseOAuth2(BaseOAuth2):
     """CyVerse OAuth authentication backend"""

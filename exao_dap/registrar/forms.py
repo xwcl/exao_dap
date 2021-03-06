@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from . import models, utils
 from ..cyverse import irods_check_access, irods_get_fs, IRODS_HOME
+from .models import Dataset
 
 def _clean_irods_ingest_path(data):
     path = os.path.normpath(data)
@@ -68,12 +69,12 @@ class IngestForm(IngestPathVerifyForm):
             cleaned_irods_path = self.fields['source_path'].clean(self.data['source_path'])
         self.cleaned_irods_path = cleaned_irods_path
         irodsfs = irods_get_fs()
-        self.collection_contents = irodsfs.ls(cleaned_irods_path)
+        self.collection_contents_lookup = utils.files_lookup_from_ls(irodsfs.ls(cleaned_irods_path))
 
         # Add radio buttons for each file
         self.data_kind_field_names = []
         self.data_kinds = models.Datum.DatumKind.choices + [('ignore', 'ignore')]
-        for filename in utils.sorted_filenames(self.collection_contents):
+        for filename in sorted(self.collection_contents_lookup.keys()):
             field = forms.ChoiceField(
                 label=filename,
                 widget=forms.widgets.RadioSelect(),
@@ -111,14 +112,16 @@ class IngestForm(IngestPathVerifyForm):
             payload['datum_set'] = []
             for key in self.data_kind_field_names:
                 field = self.fields[key]
+                record = self.collection_contents_lookup[field.label]
                 datum = {
                     'filename': field.label,
-                    'kind': self.cleaned_data[key]
+                    'kind': self.cleaned_data[key],
+                    'size_bytes': record['size'],
+                    'checksum': record['checksum'],
                 }
                 payload['datum_set'].append(datum)
             payload['owner'] = self.user.username
-            from pprint import pprint
-            pprint(payload)
+            payload['state'] = Dataset.DatasetState.COMPLETE
             return payload
         else:
             raise RuntimeError("Trying to serialize contents of invalid form")

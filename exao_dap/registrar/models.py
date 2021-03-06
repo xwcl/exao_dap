@@ -39,6 +39,16 @@ class Dataset(models.Model):
         REDUCED = 'reduced'
     stage = models.CharField(max_length=10, choices=DatasetStage.choices)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class DatasetState(models.TextChoices):
+        PENDING = 'pending'
+        COMPLETE = 'finalized'
+    state = models.CharField(
+        max_length=10,
+        choices=DatasetState.choices,
+        default=DatasetState.PENDING
+    )
+
     # ways Datasets get made
     # grid = models.ForeignKey('undertaker.Grid', null=True)
     # bigjob = models.ForeignKey('undertaker.BigJob', null=True)
@@ -54,7 +64,7 @@ class Dataset(models.Model):
     public = models.BooleanField(default=False)
 
     def data_store_path(self):
-        return os.path.join(PATH_BASE, self.identifier)
+        return f'irods://{cyverse.IRODS_HOST}' + os.path.join(PATH_BASE, self.identifier)
 
     def __str__(self):
         return self.data_store_path()
@@ -62,11 +72,55 @@ class Dataset(models.Model):
     def data_pending(self):
         return self.datum_set.exclude(state=Datum.DatumState.SYNCED)
 
+    @classmethod
+    def all_visible_to(cls, user):
+        qs = cls.objects.filter(public=True)
+        if user.is_authenticated and user.is_active:
+            # superusers: everything
+            if user.is_superuser or user.is_staff:
+                return cls.objects.all()
+            # normal users: things shared with them or owned by them
+            return (qs |
+                    cls.objects.filter(owner=user) |
+                    cls.objects.filter(shared=user))
+        return qs
+
+    def is_visible_to(self, user):
+        if self.public:
+            return True
+        elif user.is_authenticated and user.is_active:
+            if user.is_superuser or user.is_staff:
+                return True
+            elif self.shared.filter(user=user).exists() or self.owner == user:
+                return True
+        return False
+
+    @classmethod
+    def all_editable_by(cls, user):
+        qs = cls.objects.all()
+        if user.is_authenticated and user.is_active:
+            # superusers: everything
+            if user.is_superuser or user.is_staff:
+                return cls.objects.all()
+            # normal users: things shared with them or owned by them
+            return cls.objects.filter(owner=user)
+        return cls.objects.none()
+
+    def is_editable_by(self, user):
+        if user.is_authenticated and user.is_active:
+            if user.is_superuser or user.is_staff:
+                return True
+            elif self.owner == user:
+                return True
+        return False
+
+
 
 class Datum(models.Model):
     # want to copy in to service's storage area so backing files won't disappear, but should give read/ls access to original owner user
     filename = models.CharField(max_length=MAX_IDENTIFIER_LENGTH)
     checksum = models.CharField(max_length=HASH_LENGTH)
+    size_bytes = models.PositiveBigIntegerField(verbose_name='size (bytes)')
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
 
     class DatumState(models.TextChoices):
@@ -105,5 +159,5 @@ def launch_populate_metadata(sender, instance, **kwargs):
     if instance.state == Datum.DatumState.NEW:
         async_task(
             'exao_dap.registrar.tasks.populate_metadata',
-            instance
+            instance.pk
         )

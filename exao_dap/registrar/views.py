@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponseRedire
 from django.urls import reverse
 import fsspec
 import irods_fsspec
+from .filters import DatumFilter
 from .forms import IngestPathVerifyForm, IngestForm
 from .. import cyverse
 
@@ -20,7 +21,7 @@ from rest_framework.response import Response
 from .models import Dataset, Datum
 from .serializers import DatasetSerializer, DatasetInitSerializer, DatumSerializer
 from .. import extensions
-
+from django_filters import rest_framework as filters
 from rest_framework import permissions
 
 class DatasetLimitOwnerSharedStaff(permissions.BasePermission):
@@ -31,22 +32,22 @@ class DatasetLimitOwnerSharedStaff(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        can_write = request.user.is_active and (
-            request.user.is_staff or
-            request.user.is_superuser or
-            obj.owner == request.user
-        )
-        can_read = (
-            can_write or
-            obj.public or
-            (request.user.is_active and obj.shared.filter(username=request.user.username).exists())
-        )
+        # can_write = request.user.is_active and (
+        #     request.user.is_staff or
+        #     request.user.is_superuser or
+        #     obj.owner == request.user
+        # )
+        # can_read = (
+        #     can_write or
+        #     (obj.public and obj.state == Dataset.DatasetState.COMPLETE) or
+        #     (request.user.is_active and obj.shared.filter(username=request.user.username).exists())
+        # )
         # GET, HEAD, or OPTIONS
         if request.method in permissions.SAFE_METHODS:
-            return can_read
+            return obj.is_visible_to(request.user)
 
         # POST, etc.
-        return can_write
+        return obj.is_editable_by(request.user)
 
 class DatasetViewSet(extensions.BrowserFacingMixin, viewsets.ModelViewSet):
     serializer_class = DatasetSerializer
@@ -71,10 +72,9 @@ class DatasetViewSet(extensions.BrowserFacingMixin, viewsets.ModelViewSet):
         return qs
 
     def retrieve(self, request, pk=None):
-        if request.accepted_renderer.format == 'html':
-            instance = self.get_object()
-            return Response({'object': instance})
-        return super().retrieve(request, pk=pk)
+        if request.accepted_renderer.format != 'html':
+            return super().retrieve(request)
+        return Response({'object': self.get_object()})
 
     def create(self, request):
         if request.accepted_renderer.format == 'html':
@@ -120,6 +120,14 @@ class DatasetViewSet(extensions.BrowserFacingMixin, viewsets.ModelViewSet):
 class DatumViewSet(extensions.BrowserFacingMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = DatumSerializer
     queryset = Datum.objects.all()
+    # filterset_fields = ['kind', 'size_bytes', 'imported_at', 'created_at']
+    filterset_class = DatumFilter
+    # fields = {
+    #     'kind': ['exact'],
+    #     'size_bytes': ['lt', 'gt'],
+    #     'imported_at': [
+    # }
+    filter_backends = (filters.DjangoFilterBackend,)
     def get_queryset(self):
         qs = Datum.objects.filter(dataset__public=True)
         if self.request.user.is_authenticated:
@@ -140,6 +148,22 @@ class DatumViewSet(extensions.BrowserFacingMixin, viewsets.ReadOnlyModelViewSet)
             dataset__owner=self.request.user,
             state__in=[Datum.DatumState.SYNCING, Datum.DatumState.NEW]
         ), template_name='datum_processing.html')
+
+    def list(self, request):
+        if request.accepted_renderer.format != 'html':
+            return super().list(request)
+        assert len(self.filter_backends) == 1
+
+        queryset = self.filter_queryset(self.get_queryset())
+        filterset = self.filter_backends[0]().get_filterset(request, queryset, self)
+        context = {
+            'object_list': queryset,
+            'filterset': filterset,
+        }
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            context.update({'object_list': page})
+        return render(request, 'datum_list.html', context)
 
 @login_required
 def overview(request):

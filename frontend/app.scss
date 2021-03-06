@@ -85,3 +85,8 @@ table.table {
         @extend .content;
     }
 }
+
+pre.meta {
+    max-height: 30em;
+    overflow: scroll;
+}

@@ -41,7 +41,9 @@ setup(
         'django-q>=1.3.4,<1.4',
         'djangorestframework>=3.12.2,<4.0',
         # 'drf-writable-nested>=0.6.2,<0.7',
-        'django-filter-2.4.0',
+        'django-filter>=2.4.0,<3',
+        'sentry-sdk>=1.0.0,<2',
+        'psycopg2>=2.8.6,<3'
     ],
     package_data={
         PROJECT: ['VERSION'],

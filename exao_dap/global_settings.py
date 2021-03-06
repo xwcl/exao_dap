@@ -130,11 +130,13 @@ LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_CYVERSE_OAUTH2_KEY = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_KEY')
 SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET = os.environ.get('DAP_SOCIAL_AUTH_CYVERSE_OAUTH2_SECRET')
-IRODS_URL = os.environ.get('DAP_IRODS_URL', 'irods://data.cyverse.org/iplant/home/exao_dap')
+IRODS_URL_SECRET = os.environ.get('DAP_IRODS_URL_SECRET', 'irods://data.cyverse.org/iplant/home/exao_dap')
 REGISTRAR_IGNORED_FILES = set(['.DS_Store'])
 Q_CLUSTER = {
     'name': 'exao_dap',
     'orm': 'default',
+    'timeout': 60 * 60,
+    'retry': 61 * 60, # must be > timeout
 }
 
 DEBUG = os.environ.get('DAP_DEBUG') is not None
@@ -154,3 +156,13 @@ REST_FRAMEWORK = {
 
 SENTRY_DSN = os.environ.get('DAP_SENTRY_DSN')
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DAP_POSTGRESQL_DB'),
+        'USER': os.environ.get('DAP_POSTGRESQL_USER'),
+        'PASSWORD': os.environ.get('DAP_POSTGRESQL_PASSWORD'),
+        'HOST': os.environ.get('DAP_POSTGRESQL_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DAP_POSTGRESQL_PORT', '5432'),
+    }
+}

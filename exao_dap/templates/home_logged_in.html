@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
-{% block "content" %}
+{% block "full_title" %}XWCL Distributed Analysis Platform{% endblock %}
+{% block "container" %}
     <div class="columns">
       <div class="column is-6">
-        <div class="side-by-side">
-          <div class="side"><h1 class="has-text-warning">Registry</h1></div>
+        <div class="side-by-side my-2">
+          <div class="side"><h1 class="is-size-3 has-text-weight-bold has-text-warning">Registry</h1></div>
           <div class="side flex">
-            <a class="button is-rounded is-primary">Ingest new dataset</a>
-            <a class="button is-rounded is-primary">Design query</a>
+            <a class="button is-rounded is-primary" href="{% url "dataset-ingest" %}">Ingest new dataset</a>
+            <a class="button is-rounded is-primary" href="{% url "datum-list" %}">Design query</a>
           </div>
         </div>
+      <div class="tabs is-medium">
+        <ul>
+          <li class="is-active"><a>my datasets</a></li>
+          <li><a>my data</a></li>
+        </ul>
+      </div>
       {% for object in datasets %}
         {% include 'registrar/dataset_snippet.html' %}
         {% empty %}
@@ -39,15 +46,21 @@ dap_irods_sync \
       {% endfor %}
       </div>
       <div class="column is-6">
-        <div class="side-by-side">
+        <div class="side-by-side my-2">
           <div class="side">
-            <h1 class="has-text-success">Undertakings</h1>
+            <h1 class="has-text-success is-size-3 has-text-weight-bold">Undertakings</h1>
           </div>
           <div class="side flex">
             <a class="button is-rounded is-primary">Launch grid</a>
             <a class="button is-rounded is-primary">Launch job</a>
           </div>
         </div>
+        <div class="tabs is-medium">
+        <ul>
+          <li class="is-active"><a>my grids</a></li>
+          <li><a>my jobs</a></li>
+        </ul>
+      </div>
         {% for x in None %}
         {% empty %}
         <div class="no-data">
@@ -66,4 +79,4 @@ dap_irods_sync \
         {% endfor %}
       </div>
     </div>
-{% endblock "content" %}
+{% endblock "container" %}

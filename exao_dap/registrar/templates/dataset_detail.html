@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 {% block "content" %}
-<h1>Dataset</h1>
-{{object}}
+{% include 'registrar/dataset_snippet.html' %}
+<table>
+<thead>
+<tr>
+    <th>Filename</th>
+    <th>Kind</th>
+    <th>Created</th>
+    <th>Imported</th>
+</tr>
+</thead>
+<tbody>
+{% for datum in object.datum_set.all %}
+<tr>
+    <td>{{ datum.filename }}</td>
+    <td>{{ datum.kind }}</td>
+    <td>{% if datum.created_at %}{{ datum.created_at }}{% else %}&mdash;{% endif %}</td>
+    <td>{{ datum.imported_at }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 {% endblock %}

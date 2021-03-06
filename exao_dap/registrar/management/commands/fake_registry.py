@@ -3,6 +3,8 @@ from exao_dap.registrar.models import Dataset, Datum
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
+from .... import cyverse
+
 class Command(BaseCommand):
     help = ''
 
@@ -20,16 +22,35 @@ class Command(BaseCommand):
         user1.set_password("user1")
         user1.save()
 
+        prefab_ds = 'admin_mini_dataset'
         ds1, _ = Dataset.objects.get_or_create(
-            identifier='ds1',
+            identifier=prefab_ds,
             friendly_name='Dataset #1',
-            description='Example dataset number one is owned by admin but made public',
+            description='Mini dataset owned by admin but made public',
             source=Dataset.DatasetSource.ONSKY,
             stage=Dataset.DatasetStage.RAW,
             owner=admin_user,
-            public=True
+            public=True,
+            state=Dataset.DatasetState.COMPLETE
         )
         ds1.save()
+        self.stdout.write(f'Created {prefab_ds} in db')
+        fs = cyverse.irods_get_fs()
+        files = fs.ls(f'{cyverse.IRODS_HOME}/registrar/{prefab_ds}')
+        for info in files:
+            if info['type'] == 'directory':
+                continue
+            d, _ = Datum.objects.get_or_create(
+                dataset=ds1,
+                filename=info['name'],
+                checksum=info['checksum'],
+                size_bytes=info['size'],
+                kind=Datum.DatumKind.SCIENCE,
+            )
+            d.save()
+            self.stdout.write(f'added {info["name"]} {prefab_ds}')
+
+
 
         ds2, _ = Dataset.objects.get_or_create(
             identifier='ds2',
@@ -38,7 +59,8 @@ class Command(BaseCommand):
             source=Dataset.DatasetSource.ONSKY,
             stage=Dataset.DatasetStage.CALIBRATED,
             owner=admin_user,
-            public=False
+            public=False,
+            state=Dataset.DatasetState.COMPLETE
         )
         ds2.save()
 
@@ -46,11 +68,12 @@ class Command(BaseCommand):
         ds3, _ = Dataset.objects.get_or_create(
             identifier='ds3',
             friendly_name='Dataset #3',
-            description='Example dataset number three is owned by user1 and not shared',
+            description='Example dataset number three is owned by user1, pending, and not shared',
             source=Dataset.DatasetSource.ONSKY,
             stage=Dataset.DatasetStage.REDUCED,
             owner=user1,
-            public=False
+            public=False,
+            state=Dataset.DatasetState.PENDING
         )
         ds3.save()
 
@@ -63,9 +86,7 @@ class Command(BaseCommand):
             stage=Dataset.DatasetStage.REDUCED,
             owner=admin_user,
             public=False,
+            state=Dataset.DatasetState.COMPLETE,
         )
         ds4.save()
         ds4.shared.add(user1)
-
-        for user in get_user_model().objects.all():
-            Token.objects.get_or_create(user=user)

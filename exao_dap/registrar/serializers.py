@@ -4,21 +4,20 @@ from django.contrib.auth import get_user_model
 from .models import Dataset, Datum
 
 
-class DatumSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Datum
-        fields = ['filename', 'state', 'kind', 'imported_at',
-                  'created_at', 'meta', 'checksum']
-
 
 class DatumInitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Datum
-        fields = ['filename', 'kind']
+        fields = ['filename', 'kind', 'size_bytes', 'checksum']
 
+class RelatedDatumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Datum
+        fields = ['filename', 'state', 'kind', 'imported_at',
+                  'created_at', 'meta', 'checksum', 'size_bytes']
 
 class DatasetSerializer(serializers.ModelSerializer):
-    datum_set = DatumSerializer(many=True)
+    datum_set = RelatedDatumSerializer(many=True)
     shared = serializers.SlugRelatedField(
         many=True, read_only=True, slug_field='username')
     owner = serializers.SlugRelatedField(
@@ -26,10 +25,21 @@ class DatasetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ['identifier', 'friendly_name', 'source', 'owner',
-                  'stage', 'source_path', 'datum_set', 'shared', 'public']
-        depth = 1
+        fields = ['identifier', 'friendly_name', 'source', 'owner', 'state', 'created_at',
+                  'stage', 'source_path', 'data_store_path', 'datum_set', 'shared', 'public']
 
+
+class RelatedDatasetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dataset
+        fields = ['identifier', 'owner', 'source', 'stage', 'public']
+
+class DatumSerializer(serializers.ModelSerializer):
+    dataset = RelatedDatasetSerializer()
+    class Meta:
+        model = Datum
+        fields = ['filename', 'dataset', 'state', 'kind', 'imported_at',
+                  'created_at', 'meta', 'checksum', 'data_store_path', 'size_bytes']
 
 class DatasetInitSerializer(serializers.ModelSerializer):
     datum_set = DatumInitSerializer(many=True)

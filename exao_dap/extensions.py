@@ -1,5 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
+from rest_framework.response import Response
 
 
 class TemplateRenderer(TemplateHTMLRenderer):
@@ -21,8 +22,8 @@ class TemplateRenderer(TemplateHTMLRenderer):
             context = {"object_list": context}
         return context
 
-class BrowserFacingMixin:
-    renderer_classes = [TemplateRenderer, JSONRenderer]
+class BrowserFacingMixin:  # mixes in to ModelViewSet
+    renderer_classes = [JSONRenderer, TemplateRenderer]
     def get_renderer_context(self):
         base_context = super().get_renderer_context()
         base_context['view_name'] = self.get_view_name()

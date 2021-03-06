@@ -3,13 +3,28 @@ from .global_settings import *
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/var/lib/exao_dap/db.sqlite3',
+if DEBUG and not os.environ.get('DAP_POSTGRESQL_USER'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': '/var/lib/exao_dap/db.sqlite3',
+        }
     }
-}
 
 SECRET_KEY = os.environ.get('DAP_SECRET_KEY')
 STATIC_ROOT = os.environ.get('DAP_STATIC_ROOT', '/var/lib/exao_dap/static')
-SENTRY_DSN = "https://abc@123.ingest.sentry.io/456"
+SENTRY_DSN = os.environ.get('DAP_SENTRY_DSN')
+
+if SENTRY_DSN is not None:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )

@@ -2,7 +2,7 @@
 {% block "content" %}
 <h1>Dataset</h1>
 {% for object in object_list %}
-{{object}}
+{% include 'registrar/dataset_snippet.html' %}
 {% empty %}
 <h2>No data</h2>
 {% endfor %}
