@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block "outside_container" %}
-{% if user %}
   <section class="has-background-info" id="hero">
-    <div class="container mt-6 mb-6 pt-6 pb-6">
+    <div class="container">
+      {% block "hero" %}<div class="mt-6 mb-6 pt-6 pb-6">
       <h2 class="heading is-size-5 has-text-white-ter">Extreme Adaptive Optics</h2>
       <h1 class="title has-text-white">
         Distributed Analysis Platform
@@ -15,10 +15,11 @@
       <button class="button">Get started</button>
       <button class="button is-success">Learn more</button>
       </div>
+      </div>{% endblock "hero" %}
     </div>
   </section>
 
-  <div class="container">
+  <div class="container">{% block "container" %}
     <div class="columns is-3">
       <div class="column">
         <div class="box has-background-warning content" style="height: 100%">
@@ -48,6 +49,6 @@
       </div>
       </section>
     </div>
+    {% endblock "container" %}
   </div>
-  {% endif %}
 {% endblock %}

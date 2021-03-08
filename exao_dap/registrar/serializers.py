@@ -17,7 +17,7 @@ class RelatedDatumSerializer(serializers.ModelSerializer):
                   'created_at', 'meta', 'checksum', 'size_bytes']
 
 class DatasetSerializer(serializers.ModelSerializer):
-    datum_set = RelatedDatumSerializer(many=True)
+    data = RelatedDatumSerializer(many=True)
     shared = serializers.SlugRelatedField(
         many=True, read_only=True, slug_field='username')
     owner = serializers.SlugRelatedField(
@@ -26,7 +26,7 @@ class DatasetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dataset
         fields = ['identifier', 'friendly_name', 'source', 'owner', 'state', 'created_at',
-                  'stage', 'source_path', 'data_store_path', 'datum_set', 'shared', 'public']
+                  'stage', 'source_path', 'data_store_path', 'data', 'shared', 'public']
 
 
 class RelatedDatasetSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class DatumSerializer(serializers.ModelSerializer):
                   'created_at', 'meta', 'checksum', 'data_store_path', 'size_bytes']
 
 class DatasetInitSerializer(serializers.ModelSerializer):
-    datum_set = DatumInitSerializer(many=True)
+    data = DatumInitSerializer(many=True)
     owner = serializers.SlugRelatedField(
         many=False,
         slug_field='username',
@@ -50,11 +50,11 @@ class DatasetInitSerializer(serializers.ModelSerializer):
     )
 
     def create(self, validated_data):
-        datum_set = validated_data.pop('datum_set')
+        datum_payloads = validated_data.pop('data')
         with transaction.atomic():
             dataset = Dataset(**validated_data)
             dataset.save()
-            for datum in datum_set:
+            for datum in datum_payloads:
                 datum = Datum(**datum)
                 datum.dataset = dataset
                 datum.save()
@@ -63,5 +63,5 @@ class DatasetInitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dataset
         fields = ['identifier', 'friendly_name', 'source', 'description',
-                  'stage', 'source_path', 'datum_set', 'owner']
+                  'stage', 'source_path', 'data', 'owner']
         depth = 1

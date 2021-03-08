@@ -25,14 +25,18 @@
 
             <div class="navbar-dropdown">
               <a class="navbar-item" href="{% url "datum-list" %}">
-                Query all
+                Query all data
               </a>
               <a class="navbar-item" href="{% url "dataset-list" %}">
-                Datasets
+                Query all datasets
               </a>
               <a class="navbar-item" href="{% url "dataset-ingest" %}">
-                Ingest data
+                Ingest new datasets
               </a>
+              <a class="navbar-item" href="{% url "datum-processing" %}">
+                Data syncing status
+              </a>
+
             </div>
           </div>
 

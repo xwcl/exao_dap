@@ -4,9 +4,25 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django import forms
 from django.forms.renderers import TemplatesSetting
-from . import models, utils
+from . import models
+from .. import utils
+from exao_dap_client import dataset
 from ..cyverse import irods_check_access, irods_get_fs, IRODS_HOME
 from .models import Dataset
+
+def files_lookup_from_ls(fsspec_ls_output):
+    lookup = {}
+    for x in fsspec_ls_output:
+        if x['type'] == 'directory':
+            continue
+        shortname = os.path.basename(x['name'])
+        if shortname[0] == '.' or shortname in settings.REGISTRAR_IGNORED_FILES:
+            continue
+        lookup[shortname] = x
+    return lookup
+
+def sorted_filenames(fsspec_ls_output):
+    return list(sorted(files_lookup_from_ls(fsspec_ls_output).keys()))
 
 def _clean_irods_ingest_path(data):
     path = os.path.normpath(data)
@@ -15,7 +31,7 @@ def _clean_irods_ingest_path(data):
     if not irods_check_access(path):
         raise ValidationError(f"Could not access {path} as exao_dap user")
     irodsfs = irods_get_fs()
-    if len(utils.sorted_filenames(irodsfs.ls(path))) == 0:
+    if len(sorted_filenames(irodsfs.ls(path))) == 0:
         raise ValidationError(f"No data objects in {path} (did you want a subcollection of {path}?)")
     return path
 
@@ -51,11 +67,11 @@ class IngestForm(IngestPathVerifyForm):
     )
     source = forms.ChoiceField(
         widget=forms.widgets.RadioSelect(),
-        choices=models.Dataset.DatasetSource.choices
+        choices=utils.enum_to_choices(dataset.DatasetSource),
     )
     stage = forms.ChoiceField(
         widget=forms.widgets.RadioSelect(),
-        choices=models.Dataset.DatasetStage.choices
+        choices=utils.enum_to_choices(dataset.DatasetStage),
     )
     description = forms.CharField(
         widget=forms.Textarea(),
@@ -111,7 +127,7 @@ class IngestForm(IngestPathVerifyForm):
                 if key in self.data_kind_field_names:
                     continue
                 payload[key] = self.cleaned_data[key]
-            payload['datum_set'] = []
+            payload['data'] = []
             for key in self.data_kind_field_names:
                 field = self.fields[key]
                 record = self.collection_contents_lookup[field.label]
@@ -121,7 +137,7 @@ class IngestForm(IngestPathVerifyForm):
                     'size_bytes': record['size'],
                     'checksum': record['checksum'],
                 }
-                payload['datum_set'].append(datum)
+                payload['data'].append(datum)
             payload['owner'] = self.user.username
             payload['state'] = Dataset.DatasetState.COMPLETE
             return payload

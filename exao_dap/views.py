@@ -3,18 +3,21 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 
-from .registrar.models import Datum, Dataset
+from exao_dap_client import datum, dataset
+from .registrar import models
 
 def home(request):
     if request.user.is_authenticated and request.user.is_active:
-        data = Datum.objects.filter(dataset__owner=request.user)
+        data = models.Datum.objects.filter(dataset__owner=request.user)
+        pending_data = data.exclude(state=datum.DatumState.SYNCED)
         return render(request, 'home_logged_in.html', {
             'data': data,
+            'pending_data': pending_data,
             'datasets': request.user.datasets_owned.all(),
             'token': Token.objects.get(user=request.user)
         })
     else:
-        return render(request, 'home_logged_out.html')
+        return render(request, 'home.html')
 
 @login_required
 def redirect_to_profile(request):
@@ -23,9 +26,9 @@ def redirect_to_profile(request):
 def user_profile(request, username):
     user_of_interest = get_object_or_404(get_user_model(), username=username)
     is_me = user_of_interest == request.user
-    data = Datum.objects.filter(dataset__owner=user_of_interest)
+    data = models.Datum.objects.filter(dataset__owner=user_of_interest)
     if not is_me:
-        data = data.filter(dataset__public=True, state=Datum.DatumState.SYNCED)
+        data = data.filter(dataset__public=True, state=datum.DatumState.SYNCED)
     if is_me:
         datasets = user_of_interest.datasets_owned.all()
     else:

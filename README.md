@@ -215,3 +215,26 @@ dap_execute https://dap.xwcl.science/jobs/id/
 
 
 ## OGS spy
+
+
+## `dap`
+
+```
+dap ingest irods://path/to/thing dataset_id
+dap ingest /home/me/path/to/thing dataset_id --source --stage --kind --friendly-name --description --mark-all-files science
+dap retrieve dataset dataset_id [.]
+dap retrieve job_inputs job_id [.]
+dap retrieve query '{query: payload}' --from-file ./query.json [.]
+dap store /path/to/outputs
+dap invoke job_id --strategy=OSG
+    - retrieve pipeline to stashcache
+    - dap retrieve job_inputs job_id /scratch/foo
+    - cd /scratch/foo
+    - subprocess call singularity container capturing stdout/stderr
+        - stream outputs? somewhere non-durable? something for later
+    - dap ingest --as-platform . output_dataset_id
+dap execute job_id
+    retrieve
+    invoke
+    store
+```

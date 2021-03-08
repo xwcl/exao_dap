@@ -7,7 +7,9 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django_q.tasks import async_task
 
-from .. import cyverse
+from exao_dap_client import datum, dataset
+
+from .. import cyverse, utils
 
 # fyi iRODS collections can have really long names
 MAX_SUPPORTED_PATH_LENGTH = 2048
@@ -26,27 +28,13 @@ class Dataset(models.Model):
     # meta
     friendly_name = models.CharField(max_length=MAX_IDENTIFIER_LENGTH)
     description = models.TextField(blank=True, default='')
-
-    class DatasetSource(models.TextChoices):
-        ONSKY = 'onsky', 'On sky'
-        LAB = 'lab', 'Lab'
-        SIMULATION = 'simulation', 'Simulation'
-    source = models.CharField(max_length=10, choices=DatasetSource.choices)
-
-    class DatasetStage(models.TextChoices):
-        RAW = 'raw'
-        CALIBRATED = 'calibrated'
-        REDUCED = 'reduced'
-    stage = models.CharField(max_length=10, choices=DatasetStage.choices)
+    source = models.CharField(max_length=10, choices=utils.enum_to_choices(dataset.DatasetSource))
+    stage = models.CharField(max_length=10, choices=utils.enum_to_choices(dataset.DatasetStage))
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class DatasetState(models.TextChoices):
-        PENDING = 'pending'
-        COMPLETE = 'finalized'
     state = models.CharField(
         max_length=10,
-        choices=DatasetState.choices,
-        default=DatasetState.PENDING
+        choices=utils.enum_to_choices(dataset.DatasetState),
+        default=dataset.DatasetState.PENDING
     )
 
     # ways Datasets get made
@@ -70,7 +58,10 @@ class Dataset(models.Model):
         return self.data_store_path()
 
     def data_pending(self):
-        return self.datum_set.exclude(state=Datum.DatumState.SYNCED)
+        return self.data.exclude(state=datum.DatumState.SYNCED)
+
+    def data_synced(self):
+        return self.data.filter(state=datum.DatumState.SYNCED)
 
     @classmethod
     def all_visible_to(cls, user):
@@ -121,21 +112,15 @@ class Datum(models.Model):
     filename = models.CharField(max_length=MAX_IDENTIFIER_LENGTH)
     checksum = models.CharField(max_length=HASH_LENGTH)
     size_bytes = models.PositiveBigIntegerField(verbose_name='size (bytes)')
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name='data')
 
-    class DatumState(models.TextChoices):
-        NEW = 'new', 'new'
-        SYNCING = 'syncing', 'syncing'
-        SYNCED = 'synced', 'synced'
     state = models.CharField(
-        max_length=10, choices=DatumState.choices, default=DatumState.NEW)
+        max_length=10,
+        choices=utils.enum_to_choices(datum.DatumState),
+        default=datum.DatumState.NEW
+    )
 
-    class DatumKind(models.TextChoices):
-        SCIENCE = 'science', 'science'
-        CALIBRATION = 'calibration', 'calibration'
-        REFERENCE = 'reference', 'reference'
-        PRODUCT = 'product', 'product'
-    kind = models.CharField(max_length=20, choices=DatumKind.choices)
+    kind = models.CharField(max_length=20, choices=utils.enum_to_choices(datum.DatumKind))
     imported_at = models.DateTimeField(auto_now_add=True)
     # this should be inferred from metadata when available, otherwise use imported_at
     created_at = models.DateTimeField(null=True, blank=True)
@@ -156,8 +141,17 @@ class Datum(models.Model):
 
 @receiver(post_save, sender=Datum)
 def launch_populate_metadata(sender, instance, **kwargs):
-    if instance.state == Datum.DatumState.NEW:
+    if instance.state == datum.DatumState.NEW:
         async_task(
             'exao_dap.registrar.tasks.populate_metadata',
             instance.pk
         )
+
+@receiver(post_save, sender=Datum)
+def mark_dataset_complete(sender, instance, **kwargs):
+    if instance.state == datum.DatumState.SYNCED:
+        ds = instance.dataset
+        remaining = ds.data_pending().count()
+        if remaining == 0:
+            ds.state = dataset.DatasetState.COMPLETE
+            ds.save()

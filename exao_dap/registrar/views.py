@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import renderer_classes
 from rest_framework.response import Response
 from .models import Dataset, Datum
+from exao_dap_client import datum
 from .serializers import DatasetSerializer, DatasetInitSerializer, DatumSerializer
 from .. import extensions
 from django_filters import rest_framework as filters
@@ -146,7 +147,7 @@ class DatumViewSet(extensions.BrowserFacingMixin, viewsets.ReadOnlyModelViewSet)
         # but otherwise only committed datasets are visible
         return Response(self.queryset.filter(
             dataset__owner=self.request.user,
-            state__in=[Datum.DatumState.SYNCING, Datum.DatumState.NEW]
+            state__in=[datum.DatumState.SYNCING, datum.DatumState.NEW]
         ), template_name='datum_processing.html')
 
     def list(self, request):

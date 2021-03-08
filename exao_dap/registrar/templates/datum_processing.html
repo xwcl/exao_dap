@@ -7,6 +7,7 @@ and it becoming available for queries and jobs, the platform must
 index it to extract metadata.</p>
 {% endblock %}
 {% block "table-header" %}
+    <th>State</th>
     <th>Filename</th>
     <th>Dataset</th>
     <th>Source</th>
@@ -17,6 +18,7 @@ index it to extract metadata.</p>
 {% endblock %}
 {% block "table-entry" %}
 <tr>
+    <td>{{ object.state }}</td>
     <td>{{ object.filename }}</td>
     <td><a href="{% url "dataset-detail" object.dataset.identifier %}">{{ object.dataset.identifier }}</a></td>
     <td>{{ object.dataset.source }}</td>
@@ -25,9 +27,6 @@ index it to extract metadata.</p>
     <td>{{ object.created_at }}</td>
     <td>{{ object.imported_at }}</td>
 </tr>
-<tr><td colspan="7" class="px-5"><details><summary>Metadata</summary>
-<pre>{{ object.meta|pprint }}</pre>
-</details></td></tr>
 {% endblock %}
 {% block "table-empty" %}
 <h4>No data waiting to be ingested</h4>
