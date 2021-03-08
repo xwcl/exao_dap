@@ -4,7 +4,7 @@ WORKDIR /frontend
 # alpine lacks bash but we're not using bashisms
 RUN sh -x ./build-assets.sh
 FROM python:latest@sha256:ca8bd3c91af8b12c2d042ade99f7c8f578a9f80a0dbbd12ed261eeba96dd632f
-ADD README.md VERSION init-python.sh manage.py setup.py /exao_dap/
+ADD README.md VERSION init-python.sh run.sh manage.py setup.py /exao_dap/
 ADD exao_dap /exao_dap/exao_dap
 WORKDIR /exao_dap
 COPY --from=assetBuild /frontend/dist/ /exao_dap/exao_dap/static/exao_dap/bundle/
@@ -12,4 +12,4 @@ COPY --from=assetBuild /frontend/dist/ /exao_dap/exao_dap/static/exao_dap/bundle
 RUN bash -x ./init-python.sh
 VOLUME /var/lib/exao_dap
 EXPOSE 8000
-ENTRYPOINT [ "/exao_dap/env/bin/gunicorn", "exao_dap.wsgi", "--bind", "0.0.0.0:8000" ]
+ENTRYPOINT [ "/exao_dap/run.sh"]

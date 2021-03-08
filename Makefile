@@ -31,6 +31,6 @@ deploy: docker-build-force
 	docker tag exao_dap xwcl/exao_dap
 	docker push xwcl/exao_dap
 	ssh dap.xwcl.science sudo -u exao_dap -i podman pull xwcl/exao_dap
-	ssh dap.xwcl.science sudo systemctl restart podman-exao_dap exao_dap-setup exao_dap-qcluster
+	ssh dap.xwcl.science sudo systemctl restart podman-exao_dap exao_dap-qcluster
 
 .PHONY: all init-python build-assets serve deploy dev-frontend dev-backend docker-build
